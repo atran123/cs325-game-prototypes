@@ -15,7 +15,7 @@ function preload() {
 
 var ball;
 var speed = 200;
-var time = 30000;
+var time = 5000;
 var timer;
 var victory = true;
 var cont = true;
@@ -24,6 +24,8 @@ function create() {
 
 	// Add music
     music = game.add.audio('gameMusic');
+    music2 = game.add.audio('completeMusic');
+    music3 = game.add.audio('gameoverMusic');
     music.loop = true;
     music.play();
 	
@@ -106,14 +108,8 @@ function update() {
 	}
 	else if (victory){  // victory
 		guard.kill();
-		music.stop();
-		music = game.add.audio('gameoverMusic');
-		music.play();
 	}
 	else {  // lost, game over
-		music.stop();
-		music = game.add.audio('gameoverMusic');
-		music.play();
     	guard.animations.stop();
         guard.frame = 4;
         guard.body.velocity.setTo(0, 0);
@@ -157,6 +153,8 @@ function update() {
 function endTimer() {
 	// Stop the timer when the delayed event triggers
 	timer.stop();
+	music.stop();
+	music2.play();
 	cont = false;
 }
 
@@ -181,6 +179,8 @@ function targetHit (object, target) {
     // Removes the target from the screen
     object.kill()
     timer.stop();
+    music.stop();
+	music3.play();
     cont = false
     victory = false;
 }

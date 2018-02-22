@@ -15,7 +15,7 @@ function preload() {
 
 var ball;
 var speed = 200;
-var time = 5000;
+var time = 30000;
 var timer;
 var victory = true;
 var cont = true;

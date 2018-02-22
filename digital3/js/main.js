@@ -7,6 +7,9 @@ function preload() {
     game.load.image('ball', 'assets/ball.png');
     game.load.image('ground', 'assets/wall.jpg');
     game.load.spritesheet('guard', 'assets/dude.png', 32, 48);
+    game.load.audio('completeMusic', ['assets/complete.mp3']);
+    game.load.audio('gameoverMusic', ['assets/gameover.mp3']);
+    game.load.audio('gameMusic', ['assets/overworld.mp3']);
 
 }
 
@@ -18,6 +21,11 @@ var victory = true;
 var cont = true;
 
 function create() {
+
+	// Add music
+    music = game.add.audio('gameMusic');
+    music.loop = true;
+    music.play();
 	
 	//  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -96,10 +104,16 @@ function update() {
 	{
 		guard.animations.play('left');
 	}
-	else if (victory){
+	else if (victory){  // victory
 		guard.kill();
+		music.stop();
+		music = game.add.audio('gameoverMusic');
+		music.play();
 	}
-	else {
+	else {  // lost, game over
+		music.stop();
+		music = game.add.audio('gameoverMusic');
+		music.play();
     	guard.animations.stop();
         guard.frame = 4;
         guard.body.velocity.setTo(0, 0);

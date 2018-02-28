@@ -54,6 +54,7 @@ function create() {
     targets = game.add.group();
     targets.physicsBodyType = Phaser.Physics.ARCADE;
     targets.enableBody = true;
+    //  Enables all kind of input actions on this image group (click, etc)
     targets.inputEnableChildren = true;
 
     //------------------------------------------------------------------------------------
@@ -71,7 +72,7 @@ function create() {
     //  The score
     scoreText = game.add.text(60, 8, 'Score: 0', { fontSize: '40px', fill: '#f40' });
     chickenCountText = game.add.text(360, 8, 'Chickens Remain: 60', { fontSize: '40px', fill: '#0000FF' });
-    text = game.add.text( game.world.centerX-360, game.world.height-40, "Shoot 20/60 chickens. Use mouse or touch", { fontSize: '32px', fill: '#00FFFF', align: "center" } );
+    text = game.add.text( game.world.centerX-360, game.world.height-40, "Shoot 20/60 chickens. Use mouse or touch.", { fontSize: '32px', fill: '#00FFFF', align: "center" } );
 }
 
 //----------------------------------------------------------------------------------------
@@ -138,7 +139,7 @@ function createTargets(){
     	target.animations.play('left');
     }
     
-    //  Enables all kind of input actions on this image (click, etc)
+    // listen for input events
     targets.onChildInputDown.add(listener, this);
     
     //update the chicken count
@@ -176,5 +177,5 @@ function listener (sprite) {
 
 function resetScores(){
     score=0;
-    chickenCount=0;
+    chickenCount=60;
 }

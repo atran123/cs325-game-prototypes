@@ -4,8 +4,6 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', { preload: preload, cr
 // load resources
 
 function preload() {
-    game.load.image('gun', 'assets/gun.png');
-    game.load.image('bullet', 'assets/bullet.png');
     game.load.spritesheet('chicken', 'assets/chicken.png', 37.5, 37.5);
     game.load.image('bg', 'assets/farm.jpg');
     game.load.audio('completeMusic', ['assets/Level_Clear.mp3']);
@@ -16,25 +14,17 @@ function preload() {
 //----------------------------------------------------------------------------------------
 // global variables
 
-var player;
-var cursors;
-var bullets;
 var targets;
 var background;
-var fireButton = null;
-var bulletTime = 0;
 
 var score = 0;
 var scoreText;
-var chickenCount = 0;
+var chickenCount = 60;
 var chickenCountText;
 var text;
 var loop;
 var music;
 var lost = false;
-
-//var target; 
-//var counter = 0;
 
 function quitGame() {
     //  Here you should destroy anything you no longer need.
@@ -61,9 +51,10 @@ function create() {
 
     //------------------------------------------------------------------------------------
 
-    bullets = game.add.group();
     targets = game.add.group();
     targets.physicsBodyType = Phaser.Physics.ARCADE;
+    targets.enableBody = true;
+    targets.inputEnableChildren = true;
 
     //------------------------------------------------------------------------------------
 
@@ -75,36 +66,11 @@ function create() {
     createTargets();
     loop = game.time.events.repeat(Phaser.Timer.SECOND * 1, 59, createTargets, this);
 
-
-    //------------------------------------------------------------------------------------
-
-    //  Creates 1 single bullet, using the 'bullet' graphic
-    //  Our bullet group
-    bullets.enableBody = true;
-    bullets.physicsBodyType = Phaser.Physics.ARCADE;
-    bullets.createMultiple(1, 'bullet');
-    bullets.setAll('anchor.x', 0.5);
-    bullets.setAll('anchor.y', 1);
-    bullets.setAll('outOfBoundsKill', true);
-    bullets.setAll('checkWorldBounds', true);
-
-    //------------------------------------------------------------------------------------
-
-    // Create a player sprite at the bottom of the screen using the 'gun' image.
-    player = game.add.sprite(game.world.centerX, game.world.height-70, 'gun');
-    player.anchor.setTo( 0.4, 0.5 );
-    game.physics.arcade.enable(player);
-    player.body.collideWorldBounds = true;
-
-    //  And some controls to play the game with
-    cursors = game.input.keyboard.createCursorKeys();
-    fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-
     //------------------------------------------------------------------------------------
 
     //  The score
-    scoreText = game.add.text(190, 8, 'Score: 0', { fontSize: '40px', fill: '#f40' });
-    chickenCountText = game.add.text(480, 8, 'Chickens: 0', { fontSize: '40px', fill: '#0000FF' });
+    scoreText = game.add.text(60, 8, 'Score: 0', { fontSize: '40px', fill: '#f40' });
+    chickenCountText = game.add.text(360, 8, 'Chickens Remain: 60', { fontSize: '40px', fill: '#0000FF' });
     text = game.add.text( game.world.centerX-360, game.world.height-40, "Shoot 20/60 chickens. Use mouse or touch", { fontSize: '32px', fill: '#00FFFF', align: "center" } );
 }
 
@@ -112,7 +78,7 @@ function create() {
 
 function update() {
 
-    if ((chickenCount == 60) && (score < 20))
+    if ((chickenCount == 0) && (score < 20))
     {
         //reset score, stop creating targets, change text
         game.time.events.remove(loop);
@@ -123,37 +89,8 @@ function update() {
         lost =true;
     }
 
-    //  Reset the players velocity (movement)
-    player.body.velocity.x = 0;
-    player.body.velocity.y = 0;
-
-    if (cursors.left.isDown)
-    {
-        //  Move to the left
-        player.body.velocity.x = -250;
-    }
-    else if (cursors.right.isDown)
-    {
-        //  Move to the right
-        player.body.velocity.x = 250;
-    }
-    else
-    {
-        //  Stand still
-         player.body.velocity.x = 0;
-    }
-
-    // When fire button is pressed
-    if (fireButton.isDown)
-    {
-        fireBullet();
-    }
-
-    //update the chopper count text
-    chickenCountText.text = 'Chickens: ' + chickenCount;
-
-    // collision handling
-    game.physics.arcade.overlap(bullets, targets, targetHit, null, this);
+    //update the chicken count text
+    chickenCountText.text = 'Chickens Remain: ' + chickenCount;
 
     if (lost === true){
         //music = game.add.audio('gameoverMusic');
@@ -161,14 +98,6 @@ function update() {
         //the "click to restart" handler
         game.input.onTap.addOnce(function() { resetScores();music.stop();game.state.restart();}, this);
     }
-    
-    /*
-    //  if target overlapping the mouse pointer
-    if (Phaser.Rectangle.contains(player.body, game.input.x, game.input.y)){
-    	if (game.input.mousePointer.isDown){
-    		target.kill();
-    	}
-    }*/
     
 }
 
@@ -179,21 +108,13 @@ function createTargets(){
 
     var randomLR = Math.round(Math.random());
     var randomY = Math.round(Math.random()) + Math.round(Math.random());
-
-    targets.enableBody = true;
     
     if (randomLR === 0){ // target appears from the left
     	// Create a sprite at the left edge of the screen using the 'chicken' image.
-		target = targets.create((Math.random()/2)*game.world.width,randomY*128+128, 'chicken');
-		
-		//  Enables all kind of input actions on this image (click, etc)
-    	//target.inputEnabled = true;
-    	// target.events.onInputDown.add(listener, this);
-		
+		target = targets.create((Math.random()/2)*game.world.width,randomY*128+128, 'chicken');	
 		// Turn on the arcade physics engine for this sprite.
 		game.physics.arcade.enable(target);
 		// move target sprite horizontally across the screen
-        //target.body.velocity.x = (Math.random() + 1) * 150;
     	target.body.velocity.setTo((Math.random() + 1) * 150, -(Math.random() + 1) * 150);
     	//  Our 3 animations, flying left, right, and up.
 		target.animations.add('up', [0, 1, 2, 3], 10, true);
@@ -204,10 +125,9 @@ function createTargets(){
     }
     else if (randomLR === 1){ // target appears from the right
     	// Create a sprite at the left edge of the screen using the 'chicken' image.
-		target = targets.create((Math.random()/2+0.5)*game.world.width,randomY*128+128, 'chicken');
+		target = targets.create((Math.random()/2+0.5)*game.world.width,randomY*128+128, 'chicken');	
 		// Turn on the arcade physics engine for this sprite.
 		game.physics.arcade.enable(target);
-		// move target sprite horizontally across the screen
         //target.body.velocity.x = - (Math.random() + 1) * 150;
         target.body.velocity.setTo(-(Math.random() + 1) * 150, -(Math.random() + 1) * 150);
         //  Our 3 animations, flying left, right, and up.
@@ -218,31 +138,26 @@ function createTargets(){
     	target.animations.play('left');
     }
     
-    //update the chicken count
-    chickenCount += 1;
+    //  Enables all kind of input actions on this image (click, etc)
+    targets.onChildInputDown.add(listener, this);
     
-    text = game.add.text(250, 16, '', { fill: '#ffffff' });
+    //update the chicken count
+    chickenCount -= 1;
+    
+    text = game.add.text(250, 64, '', { fill: '#000000' });
 
 }
 
-/*
-function listener () {
-    counter++;
-    text.text = "You clicked " + counter + " times!";
-}*/
 
-//when bullet hits targets
-function targetHit (object, target) {
+function listener (sprite) {
 
-    // Removes the target from the screen
-    object.kill()
-    target.kill();
+	//  Add and update the score
+	score ++;
+	scoreText.text = 'Score: ' + score;
+	
+	sprite.kill();
 
-    //  Add and update the score
-    score += 1;
-    scoreText.text = 'Score: ' + score;
-
-    if (score === 10)
+    if (score === 20)
     {
         //reset score, stop creating targets, change text
         game.time.events.remove(loop);
@@ -257,28 +172,6 @@ function targetHit (object, target) {
         //the "click to restart" handler
         game.input.onTap.addOnce(function() { resetScores();music.stop();game.state.restart();}, this);
     }
-}
-
-// when fire button is pressed
-function fireBullet () {
-    if (game.time.now > bulletTime)
-    {
-        //  Grab the first bullet we can from the pool
-        bullet = bullets.getFirstExists(false);
-
-        if (bullet)
-        {
-            //  And fire it
-            bullet.reset(player.x+8, player.y+12);
-            bullet.body.velocity.y = -450;
-            bulletTime = game.time.now + 200;
-        }
-    }
-}
-
-//  Called if the bullet goes out of the screen
-function resetBullet (bullet) {
-    bullet.kill();
 }
 
 function resetScores(){

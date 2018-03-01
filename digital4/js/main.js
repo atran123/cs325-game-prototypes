@@ -17,6 +17,7 @@ function preload() {
 
 var targets;
 var background;
+var fireButton = null;
 
 var score = 0;
 var scoreText;
@@ -26,6 +27,9 @@ var text;
 var loop;
 var music;
 var lost = false;
+var won = false;
+var time = 60000;
+var timer;
 
 function quitGame() {
     //  Here you should destroy anything you no longer need.
@@ -36,6 +40,15 @@ function quitGame() {
 
 function create() {
 
+	// Create a custom timer
+    timer = game.time.create();
+    
+	//  Set a TimerEvent to occur after 30 seconds
+    timer.loop(time, endTimer, this);
+
+	// Start the timer
+    timer.start();
+
     // Add music
     music = game.add.audio('gameMusic');
     music.loop = true;
@@ -44,6 +57,12 @@ function create() {
     gameover = game.add.audio('gameoverMusic');
     complete = game.add.audio('completeMusic');
     squawk = game.add.audio('squawk');
+    
+    //------------------------------------------------------------------------------------
+    
+    restartButton = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
+    
+    //------------------------------------------------------------------------------------
 
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -77,31 +96,24 @@ function create() {
     //  The score
     scoreText = game.add.text(60, 8, 'SCORE: 0', { fontSize: '40px', fill: '#f40' });
     chickenCountText = game.add.text(360, 8, 'CHICKENS LEFT: 60', { fontSize: '40px', fill: '#0000FF' });
-    text = game.add.text( game.world.centerX-360, game.world.height-40, "SHOOT 20/60 CHICKENS. USE MOUSE OR TOUCH.", { fontSize: '28px', fill: '#00FFFF', align: "center" } );
+    text = game.add.text( game.world.centerX-360, game.world.height-40, "SHOOT 20/60 CHICKENS WITH MOUSE CLICK OR TOUCH.", { fontSize: '24px', fill: '#00FFFF', align: "center" } );
 }
 
 //----------------------------------------------------------------------------------------
 
 function update() {
 
-    if ((chickenCount == 0) && (score < 20))
-    {
-        //reset score, stop creating targets, change text
-        game.time.events.remove(loop);
-        text.text = " YOU LOST! Click to restart";
-        text.visible = true;
-
-        music.stop();
-        lost = true;
-    }
-
     //update the chicken count text
     chickenCountText.text = 'CHICKENS LEFT: ' + chickenCount;
 
     if (lost === true){
-        //gameover.play();
-        //the "click to restart" handler
-        game.input.onTap.addOnce(function() { resetScores();music.stop();game.state.restart();}, this);
+        //the "press ENTER to restart" handler
+        if (restartButton.isDown) {resetScores();music.stop();gameover.stop();game.state.restart();}
+    }
+    
+    if (won === true){
+        //the "press ENTER to restart" handler
+        if (restartButton.isDown) {resetScores();complete.stop();game.state.restart();}
     }
     
 }
@@ -153,7 +165,6 @@ function createTargets(){
 
 }
 
-
 function listener (sprite) {
 
 	//  Add and update the score
@@ -167,19 +178,34 @@ function listener (sprite) {
     {
         //reset score, stop creating targets, change text
         game.time.events.remove(loop);
-        text.text = " YOU WON! Click to restart";
+        text.text = " YOU WON! Press ENTER to restart";
         text.visible = true;
+        won = true;
 
         //stop music
         music.stop();
         complete.play();
-
-        //the "click to restart" handler
-        game.input.onTap.addOnce(function() { resetScores();music.stop();game.state.restart();}, this);
     }
 }
 
 function resetScores(){
     score=0;
     chickenCount=60;
+}
+
+function endTimer() {
+	// Stop the timer when the delayed event triggers
+	timer.stop();
+	//music.stop();
+	//if ((score < 20) && (chickenCount == 0))
+	if (score < 20)
+	{
+        //reset score, stop creating targets, change text
+        game.time.events.remove(loop);
+        text.text = " YOU LOST! Press ENTER to restart";
+        text.visible = true;
+        music.stop();
+        gameover.play();
+        lost = true;
+    }
 }

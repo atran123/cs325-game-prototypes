@@ -9,7 +9,7 @@ function preload() {
     game.load.audio('completeMusic', ['assets/Level_Clear.mp3']);
     game.load.audio('gameoverMusic', ['assets/Game_Over.mp3']);
     game.load.audio('gameMusic', ['assets/River Valley Breakdown.mp3']);
-    game.load.audio('squawk', ['assets/killchicken.mp3']);
+    game.load.audio('squawk', ['assets/killChicken.mp3']);
 }
 
 //----------------------------------------------------------------------------------------

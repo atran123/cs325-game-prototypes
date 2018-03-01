@@ -9,6 +9,7 @@ function preload() {
     game.load.audio('completeMusic', ['assets/Level_Clear.mp3']);
     game.load.audio('gameoverMusic', ['assets/Game_Over.mp3']);
     game.load.audio('gameMusic', ['assets/River Valley Breakdown.mp3']);
+    game.load.audio('squawk', ['assets/killchicken.wav']);
 }
 
 //----------------------------------------------------------------------------------------
@@ -39,6 +40,10 @@ function create() {
     music = game.add.audio('gameMusic');
     music.loop = true;
     music.play();
+    
+    gameover = game.add.audio('gameoverMusic');
+    complete = game.add.audio('completeMusic');
+    squawk = game.add.audio('squawk');
 
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -70,9 +75,9 @@ function create() {
     //------------------------------------------------------------------------------------
 
     //  The score
-    scoreText = game.add.text(60, 8, 'Score: 0', { fontSize: '40px', fill: '#f40' });
-    chickenCountText = game.add.text(360, 8, 'Chickens Remain: 60', { fontSize: '40px', fill: '#0000FF' });
-    text = game.add.text( game.world.centerX-360, game.world.height-40, "Shoot 20/60 chickens. Use mouse or touch.", { fontSize: '32px', fill: '#00FFFF', align: "center" } );
+    scoreText = game.add.text(60, 8, 'SCORE: 0', { fontSize: '40px', fill: '#f40' });
+    chickenCountText = game.add.text(360, 8, 'CHICKENS LEFT: 60', { fontSize: '40px', fill: '#0000FF' });
+    text = game.add.text( game.world.centerX-360, game.world.height-40, "SHOOT 20/60 CHICKENS. USE MOUSE OR TOUCH.", { fontSize: '28px', fill: '#00FFFF', align: "center" } );
 }
 
 //----------------------------------------------------------------------------------------
@@ -83,19 +88,18 @@ function update() {
     {
         //reset score, stop creating targets, change text
         game.time.events.remove(loop);
-        text.text = " You Lost! Click to restart";
+        text.text = " YOU LOST! Click to restart";
         text.visible = true;
 
         music.stop();
-        lost =true;
+        lost = true;
     }
 
     //update the chicken count text
-    chickenCountText.text = 'Chickens Remain: ' + chickenCount;
+    chickenCountText.text = 'CHICKENS LEFT: ' + chickenCount;
 
     if (lost === true){
-        //music = game.add.audio('gameoverMusic');
-        //music.play();
+        //gameover.play();
         //the "click to restart" handler
         game.input.onTap.addOnce(function() { resetScores();music.stop();game.state.restart();}, this);
     }
@@ -145,7 +149,7 @@ function createTargets(){
     //update the chicken count
     chickenCount -= 1;
     
-    text = game.add.text(250, 64, '', { fill: '#000000' });
+    text = game.add.text(250, 75, '', { fill: '#000000' });
 
 }
 
@@ -153,22 +157,22 @@ function createTargets(){
 function listener (sprite) {
 
 	//  Add and update the score
-	score ++;
-	scoreText.text = 'Score: ' + score;
+	score += 0.5;
+	scoreText.text = 'SCORE: ' + score;
 	
+	squawk.play();
 	sprite.kill();
 
     if (score === 20)
     {
         //reset score, stop creating targets, change text
         game.time.events.remove(loop);
-        text.text = " You Won! Click to restart";
+        text.text = " YOU WON! Click to restart";
         text.visible = true;
 
         //stop music
         music.stop();
-        music = game.add.audio('completeMusic');
-        music.play();
+        complete.play();
 
         //the "click to restart" handler
         game.input.onTap.addOnce(function() { resetScores();music.stop();game.state.restart();}, this);

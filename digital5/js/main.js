@@ -17,7 +17,7 @@ function preload() {
 var background;
 var fireButton = null;
 
-var cursor;
+var cursors;
 var ship;
 
 var music;
@@ -49,7 +49,7 @@ function create() {
     //------------------------------------------------------------------------------------
     
     //  Resize our game world to be a 2000 x 2000 square
-    game.world.setBounds(-1000, -1000, 2048, 2048);
+    //game.world.setBounds(-1000, -1000, 2048, 2048);
 
     //  A simple background for our game
     background = game.add.sprite( 0, 0, 'bg' );
@@ -58,7 +58,6 @@ function create() {
     //------------------------------------------------------------------------------------
 
    	// Create a player and ship sprite at X,Y
-    
     ship = game.add.sprite(70, game.world.height-84, 'ship');
     
     // Anchor the sprites at their center, as opposed to its top-left corner.
@@ -76,9 +75,6 @@ function create() {
     ship.animations.add('right', [8, 9, 10, 11], 10, true);
     ship.animations.add('up', [12, 13, 14, 15], 10, true);
     
-    //  This gets the ship moving
-    ship.body.velocity.setTo(speed, 0);
-    
     //  This sets the image bounce energy for the horizontal 
     //  and vertical vectors (as an x,y point). "1" is 100% energy return
     ship.body.bounce.setTo(1, 1);
@@ -92,11 +88,14 @@ function create() {
     //------------------------------------------------------------------------------------
     
     restartButton = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
+    
 }
 
 //----------------------------------------------------------------------------------------
 
-/*function update() {
+//function update() {}
+
+function update() {
 
 	//  Reset the players velocity (movement)
     ship.body.velocity.x = 0;
@@ -105,33 +104,33 @@ function create() {
     if (cursors.left.isDown)
     {
         //  Move to the left
-        ship.body.velocity.x = -250;
+        ship.body.velocity.setTo(-100, 0);
         ship.animations.play('left');
     }
     else if (cursors.right.isDown)
     {
         //  Move to the right
-        ship.body.velocity.x = 250;
+        ship.body.velocity.setTo(100, 0);
         ship.animations.play('right');
     }
     else if (cursors.up.isDown)
     {
-        //  Move to the right
-        ship.body.velocity.x = 250;
+        //  Move up
+        ship.body.velocity.setTo(0, -100);
         ship.animations.play('up');
     }
     else if (cursors.down.isDown)
     {
-        //  Move to the right
-        ship.body.velocity.x = 250;
+        //  Move down
+        ship.body.velocity.setTo(0, 100);
         ship.animations.play('down');
     }
     else
     {
     //  Stand still
-    ship.body.velocity.x = 0;
+    ship.animations.stop();
+    ship.body.velocity.setTo(0, 0);
     }
-
-}*/
+}
 
 //----------------------------------------------------------------------------------------

@@ -4,8 +4,8 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game', { preload: preload, cr
 // load resources
 
 function preload() {
-    game.load.spritesheet('cards', 'assets/cards.gif', 50.69, 73.6);
-    game.load.image('bg', 'assets/table.jpg');
+    game.load.spritesheet('cards', 'assets/cards.gif', 81, 81);
+    game.load.image('bg', 'assets/wood.jpg');
     game.load.audio('completeMusic', ['assets/Level_Clear.mp3']);
     game.load.audio('gameoverMusic', ['assets/Game_Over.mp3']);
     game.load.audio('gameMusic', ['assets/casino.mp3']);
@@ -15,37 +15,28 @@ function preload() {
 // global variables
 
 var background;
-var fireButton = null;
-
-var cursors;
-var ship;
-var i,x,y;
+var i, j, k;
 
 var music;
-var lost = false;
-var won = false;
+var complete = false;
 
-var text;
+var card = [];
+var series = [0,1,2,3,4,5,6,7];
 
-var nums = new Set();
+var movesText;
+var moves;
 
-
+//----------------------------------------------------------------------------------------
 function quitGame() {
     //  Here you should destroy anything you no longer need.
     //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
 }
-
 //----------------------------------------------------------------------------------------
 
 function create() {
 
-	var text = "";
-	
 	var random = [];
-	var card = [];
-	var range = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,
-			21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,
-			41,42,43,44,45,46,47,48,49,50,51];
+	var range = [0,1,2,3,4,5,6,7,8];
 
     // Add music
     music = game.add.audio('gameMusic');
@@ -55,14 +46,26 @@ function create() {
     gameover = game.add.audio('gameoverMusic');
     complete = game.add.audio('completeMusic');
     
+    moves = 0;
+    
     //------------------------------------------------------------------------------------
     // Random frames for the cards
-	
-    for (i=0; i<52; i++){
+	/*
+    for (i=0; i<8; i++){
    		randIndex = Math.floor(Math.random()*range.length);
     	random[i] = range[randIndex];
     	range.splice(randIndex, 1);
-   	}
+   	}*/
+   	
+   	random[0] = 0;
+   	random[1] = 1;
+	random[2] = 2;
+	random[3] = 3;
+	random[4] = 4;
+	random[5] = 5;
+	random[6] = 6;
+	random[7] = 7;
+   	random[8] = 52;
     
     //------------------------------------------------------------------------------------
     //  We're going to be using physics, so enable the Arcade Physics system
@@ -74,55 +77,51 @@ function create() {
 
     //  A simple background for our game
     background = game.add.sprite( 0, 0, 'bg' );
-    //background = game.add.tileSprite(0, 0, 800, 600, 'bg');
 
     //------------------------------------------------------------------------------------
    	// Create player card sprites
    	
-    
-   	for (i=0; i<13; i++){
-   		card[i] = game.add.sprite(40+60*i, game.world.height-60, 'cards',random[i]);
-   		// Anchor the sprites at their center, as opposed to its top-left corner.
-   		// so they will be truly centered.
-   		card[i].anchor.setTo( 0.5, 0.5 );
+   	for (i=0; i<3; i++){
+   		card[i]= new Array(3);
    	}
    	
-   	for (i=13; i<26; i++){
-   		card[i] = game.add.sprite(40+60*(i-13), game.world.height-150, 'cards',random[i]);
-   		// Anchor the sprites at their center, as opposed to its top-left corner.
-   		// so they will be truly centered.
-   		card[i].anchor.setTo( 0.5, 0.5 );
+   	card[0][0] = game.add.sprite(310, game.world.height-364, 'cards',random[0]);
+   	card[0][1] = game.add.sprite(310+83, game.world.height-364, 'cards',random[1]);
+   	card[0][2] = game.add.sprite(310+83*2, game.world.height-364, 'cards',random[2]);
+   	
+   	card[1][0] = game.add.sprite(310, game.world.height-282, 'cards',random[3]);
+   	card[1][1] = game.add.sprite(310+83, game.world.height-282, 'cards',random[4]);
+   	card[1][2] = game.add.sprite(310+83*2, game.world.height-282, 'cards',random[5]);
+   	
+   	card[2][0] = game.add.sprite(310, game.world.height-200, 'cards',random[6]);
+   	card[2][1] = game.add.sprite(310+83, game.world.height-200, 'cards',random[7]);
+   	card[2][2] = game.add.sprite(310+83*2, game.world.height-200, 'cards',random[8]);
+   	
+   	for (i=0; i<3; i++)
+   		for (j=0; j<3; j++)
+			card[i][j].anchor.setTo(0.5,0.5);
+			
+	// randomize
+	for (k=0; k<1000000; k++){
+		randI = Math.floor(Math.random()*3);
+		randJ = Math.floor(Math.random()*3);
+		randomizer(card[randI][randJ]);
+	}
+   	
+   	// enable input and click events on cards
+   	for (i=0; i<3; i++){
+   		for (j=0; j<3; j++){
+			card[i][j].inputEnabled = true;
+			card[i][j].events.onInputDown.add(listener, this);
+   		}
    	}
    	
-   	for (i=26; i<39; i++){
-   		card[i] = game.add.sprite(40+60*(i-26), game.world.height-240, 'cards',random[i]);
-   		// Anchor the sprites at their center, as opposed to its top-left corner.
-   		// so they will be truly centered.
-   		card[i].anchor.setTo( 0.5, 0.5 );
-   	}
-   	
-   	for (i=39; i<52; i++){
-   		card[i] = game.add.sprite(40+60*(i-39), game.world.height-330, 'cards',random[i]);
-   		// Anchor the sprites at their center, as opposed to its top-left corner.
-   		// so they will be truly centered.
-   		card[i].anchor.setTo( 0.5, 0.5 );
-   	}
-   	
-   	for (i=0; i<52; i++){
-   		text = text + " " + random[i];
-   	}
-   	
-   	game.add.text(0, 20, text, { fontSize: '11px', fill: '#ff0' });
+   	movesText = game.add.text(game.world.centerX-100, 20, 'Moves: 0', { fontSize: '40px', fill: '#fF0', align: "center"  });
+   	text = game.add.text(game.world.centerX-350, 100, '', { fontSize: '40px', fill: '#228bff', align: "center"  });
    	
 	//------------------------------------------------------------------------------------
 	
-    //  The scores
-	gameText = game.add.text( game.world.centerX-200, game.world.height-340, "", { fontSize: '24px', fill: '#00FFFF', align: "center" } );
-
-	//------------------------------------------------------------------------------------
-    //  And some controls to play the game with
-    cursors = game.input.keyboard.createCursorKeys();
-    fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+   	//------------------------------------------------------------------------------------
     
     //------------------------------------------------------------------------------------
     
@@ -138,10 +137,315 @@ function create() {
 //function update() {}
 
 function update() {
+
+	movesText.text = "Moves: " + moves;
     
     //the "click to restart" handler
     //game.input.onTap.addOnce(function() { resetScores();music.stop();game.state.restart();}, this);
-    game.input.onTap.addOnce(function() { game.state.restart();}, this);
+    
+    if (complete === true){
+        //the "press ENTER to restart" handler
+        if (restartButton.isDown) {resetScores();game.state.restart();}
+    }
 }
 
 //----------------------------------------------------------------------------------------
+
+function listener (sprite) {
+
+	if (sprite == card[0][0]){
+		if (card[0][1].animations.frame == 52){
+			card[0][1].animations.frame = card[0][0].animations.frame;
+			card[0][0].animations.frame = 52;
+			moves++;
+		}
+		else if (card[1][0].animations.frame == 52){
+			card[1][0].animations.frame = card[0][0].animations.frame;
+			card[0][0].animations.frame = 52;
+			moves++;
+		}
+	} 
+	
+	else if (sprite == card[0][1]){
+		if (card[0][0].animations.frame == 52){
+			card[0][0].animations.frame = card[0][1].animations.frame;
+			card[0][1].animations.frame = 52;
+			moves++;
+		}
+		else if (card[1][1].animations.frame == 52){
+			card[1][1].animations.frame = card[0][1].animations.frame;
+			card[0][1].animations.frame = 52;
+			moves++;
+		}
+		else if (card[0][2].animations.frame == 52){
+			card[0][2].animations.frame = card[0][1].animations.frame;
+			card[0][1].animations.frame = 52;
+			moves++;
+		}
+	}
+	
+	else if (sprite == card[0][2]){
+		if (card[0][1].animations.frame == 52){
+			card[0][1].animations.frame = card[0][2].animations.frame;
+			card[0][2].animations.frame = 52;
+			moves++;
+		}
+		else if (card[1][2].animations.frame == 52){
+			card[1][2].animations.frame = card[0][2].animations.frame;
+			card[0][2].animations.frame = 52;
+			moves++;
+		}
+	}
+	
+	else if (sprite == card[1][0]){
+		if (card[1][1].animations.frame == 52){
+			card[1][1].animations.frame = card[1][0].animations.frame;
+			card[1][0].animations.frame = 52;
+			moves++;
+		}
+		else if (card[0][0].animations.frame == 52){
+			card[0][0].animations.frame = card[1][0].animations.frame;
+			card[1][0].animations.frame = 52;
+			moves++;
+		}
+		else if (card[2][0].animations.frame == 52){
+			card[2][0].animations.frame = card[1][0].animations.frame;
+			card[1][0].animations.frame = 52;
+			moves++;
+		}
+	}
+	
+	else if (sprite == card[1][1]){
+		if (card[1][0].animations.frame == 52){
+			card[1][0].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+			moves++;
+		}
+		else if (card[1][2].animations.frame == 52){
+			card[1][2].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+			moves++;
+		}
+		else if (card[0][1].animations.frame == 52){
+			card[0][1].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+			moves++;
+		}
+		else if (card[2][1].animations.frame == 52){
+			card[2][1].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+			moves++;
+		}
+	}
+	
+	else if (sprite == card[1][2]){
+		if (card[0][2].animations.frame == 52){
+			card[0][2].animations.frame = card[1][2].animations.frame;
+			card[1][2].animations.frame = 52;
+			moves++;
+		}
+		else if (card[1][1].animations.frame == 52){
+			card[1][1].animations.frame = card[1][2].animations.frame;
+			card[1][2].animations.frame = 52;
+			moves++;
+		}
+		else if (card[2][2].animations.frame == 52){
+			card[2][2].animations.frame = card[1][2].animations.frame;
+			card[1][2].animations.frame = 52;
+			moves++;
+		}
+	}
+	else if (sprite == card[2][0]){
+		if (card[1][0].animations.frame == 52){
+			card[1][0].animations.frame = card[2][0].animations.frame;
+			card[2][0].animations.frame = 52;
+			moves++;
+		}
+		else if (card[2][1].animations.frame == 52){
+			card[2][1].animations.frame = card[2][0].animations.frame;
+			card[2][0].animations.frame = 52;
+			moves++;
+		}
+	}
+	
+	else if (sprite == card[2][1]){
+		if (card[2][0].animations.frame == 52){
+			card[2][0].animations.frame = card[2][1].animations.frame;
+			card[2][1].animations.frame = 52;
+			moves++;
+		}
+		else if (card[1][1].animations.frame == 52){				
+			card[1][1].animations.frame = card[2][1].animations.frame;
+			card[2][1].animations.frame = 52;
+			moves++;
+		}
+		else if (card[2][2].animations.frame == 52){
+			card[2][2].animations.frame = card[2][1].animations.frame;
+			card[2][1].animations.frame = 52;
+			moves++;
+		}
+	}
+	
+	else if (sprite == card[2][2]){
+		if (card[2][1].animations.frame == 52){
+			card[2][1].animations.frame = card[2][2].animations.frame;
+			card[2][2].animations.frame = 52;
+			moves++;
+		}
+		else if (card[1][2].animations.frame == 52){
+			card[1][2].animations.frame = card[2][2].animations.frame;
+			card[2][2].animations.frame = 52;
+			moves++;
+		}
+	}
+	
+	if ((card[0][0].animations.frame == 0) && (card[0][1].animations.frame == 1) 
+		&& (card[0][2].animations.frame == 2) && (card[1][0].animations.frame == 3) 
+		&& (card[1][1].animations.frame == 4) && (card[1][2].animations.frame == 5) 
+		&& (card[2][0].animations.frame == 6) && (card[2][1].animations.frame == 7)){
+		complete = true;
+		text.text = "COMPLETED! Press ENTER to restart";
+		for (i=0; i<3; i++){
+			for (j=0; j<3; j++){
+				card[i][j].inputEnabled = false;
+   			}
+   		}
+	}
+}
+
+function randomizer(sprite){
+
+	if (sprite == card[0][0]){
+		if (card[0][1].animations.frame == 52){
+			card[0][1].animations.frame = card[0][0].animations.frame;
+			card[0][0].animations.frame = 52;
+		}
+		else if (card[1][0].animations.frame == 52){
+			card[1][0].animations.frame = card[0][0].animations.frame;
+			card[0][0].animations.frame = 52;
+		}
+	} 
+	
+	else if (sprite == card[0][1]){
+		if (card[0][0].animations.frame == 52){
+			card[0][0].animations.frame = card[0][1].animations.frame;
+			card[0][1].animations.frame = 52;
+		}
+		else if (card[1][1].animations.frame == 52){
+			card[1][1].animations.frame = card[0][1].animations.frame;
+			card[0][1].animations.frame = 52;
+		}
+		else if (card[0][2].animations.frame == 52){
+			card[0][2].animations.frame = card[0][1].animations.frame;
+			card[0][1].animations.frame = 52;
+		}
+	}
+	
+	else if (sprite == card[0][2]){
+		if (card[0][1].animations.frame == 52){
+			card[0][1].animations.frame = card[0][2].animations.frame;
+			card[0][2].animations.frame = 52;
+		}
+		else if (card[1][2].animations.frame == 52){
+			card[1][2].animations.frame = card[0][2].animations.frame;
+			card[0][2].animations.frame = 52;
+		}
+	}
+	
+	else if (sprite == card[1][0]){
+		if (card[1][1].animations.frame == 52){
+			card[1][1].animations.frame = card[1][0].animations.frame;
+			card[1][0].animations.frame = 52;
+		}
+		else if (card[0][0].animations.frame == 52){
+			card[0][0].animations.frame = card[1][0].animations.frame;
+			card[1][0].animations.frame = 52;
+		}
+		else if (card[2][0].animations.frame == 52){
+			card[2][0].animations.frame = card[1][0].animations.frame;
+			card[1][0].animations.frame = 52;
+		}
+	}
+	
+	else if (sprite == card[1][1]){
+		if (card[1][0].animations.frame == 52){
+			card[1][0].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+		}
+		else if (card[1][2].animations.frame == 52){
+			card[1][2].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+		}
+		else if (card[0][1].animations.frame == 52){
+			card[0][1].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+		}
+		else if (card[2][1].animations.frame == 52){
+			card[2][1].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+		}
+	}
+	
+	else if (sprite == card[1][2]){
+		if (card[0][2].animations.frame == 52){
+			card[0][2].animations.frame = card[1][2].animations.frame;
+			card[1][2].animations.frame = 52;
+		}
+		else if (card[1][1].animations.frame == 52){
+			card[1][1].animations.frame = card[1][2].animations.frame;
+			card[1][2].animations.frame = 52;
+		}
+		else if (card[2][2].animations.frame == 52){
+			card[2][2].animations.frame = card[1][2].animations.frame;
+			card[1][2].animations.frame = 52;
+		}
+	}
+	else if (sprite == card[2][0]){
+		if (card[1][0].animations.frame == 52){
+			card[1][0].animations.frame = card[2][0].animations.frame;
+			card[2][0].animations.frame = 52;
+		}
+		else if (card[2][1].animations.frame == 52){
+			card[2][1].animations.frame = card[2][0].animations.frame;
+			card[2][0].animations.frame = 52;
+		}
+	}
+	
+	else if (sprite == card[2][1]){
+		if (card[2][0].animations.frame == 52){
+			card[2][0].animations.frame = card[2][1].animations.frame;
+			card[2][1].animations.frame = 52;
+		}
+		else if (card[1][1].animations.frame == 52){				
+			card[1][1].animations.frame = card[2][1].animations.frame;
+			card[2][1].animations.frame = 52;
+			moves++;
+		}
+		else if (card[2][2].animations.frame == 52){
+			card[2][2].animations.frame = card[2][1].animations.frame;
+			card[2][1].animations.frame = 52;
+		}
+	}
+	
+	else if (sprite == card[2][2]){
+		if (card[2][1].animations.frame == 52){
+			card[2][1].animations.frame = card[2][2].animations.frame;
+			card[2][2].animations.frame = 52;
+			moves++;
+		}
+		else if (card[1][2].animations.frame == 52){
+			card[1][2].animations.frame = card[2][2].animations.frame;
+			card[2][2].animations.frame = 52;
+		}
+	}
+}
+
+function resetScores(){
+    moves = 0;
+}
+
+
+
+
+
+

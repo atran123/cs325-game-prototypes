@@ -3,8 +3,16 @@
 <head>
     <meta charset="utf-8">
     <title>Digital 7</title>
-    <script src="js/phaser.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/phaser.min.js"></script>
+	<!-- Boot.js must come first since it creates the BasicGame object
+	that stores all the states. -->
+	<script src="js/Boot.js"></script>
+	<script src="js/Preloader.js"></script>
+	<script src="js/MainMenu.js"></script>
+	<script src="js/Classic.js"></script>
+	<script src="js/New.js"></script>
+	<!-- main.js must come last since it references the other ones. -->
+	<script src="js/main.js"></script>
 
 <style>
 body
@@ -26,7 +34,7 @@ body
 <ul>
 
 <li><strong>High Concept:</strong>
-Puzzle game. 
+Puzzle game. Rearrange the numbers in order.
 </li>
 
 <li><strong>Theme:</strong>
@@ -56,20 +64,26 @@ All.
 </li>
 
 <li><strong>Strategies:</strong>
-
+In the classic game, try to solve the first row 2,3,4 first, then move to the second row, then last row.
 </li>
 <li><strong>Originality:</strong>
-Squares are playing cards. Can move a square by just clicking on it, no need to slide it.
+Squares are playing cards. Can move a square by just clicking on it, no need to slide it. There are both classic style puzzle, and new one.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+What did you learn from this prototype: developing the game with states.
+What was the easiest or hardest part of making it. Easy part: graphics. Hard part: randomize the sprites, and managing the states
 </li>
 
 <li><strong>Prototype Assets:</strong>
-Borrowed from the internet. Sources: google.
+Borrowed from the internet and the template. Sources: google.
 <ul>
-<li>Music: <a href="http://www.soundclick.com/bands/default.cfm?bandID=1053765">Casino</a></li>
-<li>Sprite Sheet: <a href="https://www.google.com/search?q=card+sprite+sheet&source=lnms&tbm=isch&sa=X&ved=0ahUKEwja59_Ny6PaAhWOdN8KHVIuCZcQ_AUICigB&biw=1349&bih=736#imgrc=-k26md5IoR0-gM:">Cards sheet</a></li>
-<li>Background: <a href="https://www.google.com/search?q=nice+backgrounds&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjFw4qwgLraAhVPnlkKHdbGAX0Q_AUoAXoECAAQAw&biw=1148&bih=692&dpr=2#imgdii=vL2_8xbl7cH5aM:&imgrc=MwqCdUxnSRu1AM:">Wood</a></li>
-<li>Restart Button: <a href="https://www.google.com/search?q=restart+button&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjhuteegLraAhVHj1kKHd7zDh8Q_AUoAXoECAAQAw&biw=1148&bih=736#imgrc=PHe9ACciyNFvhM:">Restart Button</a></li>
-
+	<li>Buttons: created with online tools from <a href="http://buttonoptimizer.com/#">Free Button Creator</a></li>
+	<li>Music: <a href="http://www.soundclick.com/bands/default.cfm?bandID=1053765">Casino</a></li>
+	<li>Sprite Sheet: <a href="https://www.google.com/search?q=card+sprite+sheet&source=lnms&tbm=isch&sa=X&ved=0ahUKEwja59_Ny6PaAhWOdN8KHVIuCZcQ_AUICigB&biw=1349&bih=736#imgrc=-k26md5IoR0-gM:">Cards sheet</a></li>
+	<li>Game Background: <a href="https://www.google.com/search?q=nice+backgrounds&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjFw4qwgLraAhVPnlkKHdbGAX0Q_AUoAXoECAAQAw&biw=1148&bih=692&dpr=2#imgdii=vL2_8xbl7cH5aM:&imgrc=MwqCdUxnSRu1AM:">Wood</a></li>
+	<li>Menu Background: <a href="https://www.google.com/search?q=nice+backgrounds&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjU89znr7raAhXwQ98KHckvBicQ_AUoAXoECAAQAw&biw=1117&bih=736#imgdii=82mvUXB1u4qWxM:&imgrc=_s9Z-X133MwHjM:">Hotel</a></li>
+	<li>Boot Background: <a href="https://www.google.com/search?biw=1117&bih=692&tbm=isch&sa=1&ei=plDSWquLH43q_Ab-8bX4CA&q=nice+backgrounds+800x600&oq=nice+backgrounds+800x600&gs_l=psy-ab.3...86333.88819.0.89038.8.8.0.0.0.0.82.539.8.8.0....0...1c.1.64.psy-ab..0.1.81...0j0i67k1.0.SbXPPtasSD0#imgrc=VD4CBBKffF85-M:">Ocean</a></li>
 </ul>
 </li>
 

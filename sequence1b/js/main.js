@@ -23,6 +23,8 @@ var music;
 var card = [];
 var goal = [];
 
+var emptySquare;
+
 var movesText, goalText, text;
 
 var moves;
@@ -84,10 +86,9 @@ function create() {
 			card[i][j].anchor.setTo(0.5,0.5);
 			
 	// randomize
-	for (k=0; k<1000000; k++){
-		randI = Math.floor(Math.random()*3);
-		randJ = Math.floor(Math.random()*3);
-		randomizer(card[randI][randJ]);
+	emptySquare = card[2][2];
+	for (k=0; k<100000; k++){
+		randomizer();
 	}
    	
    	// enable input and click events on cards
@@ -304,136 +305,179 @@ function listener (sprite) {
 	}
 }
 
-function randomizer(sprite){
+//----------------------------------------------------------------------------------------
 
-	if (sprite == card[0][0]){
-		if (card[0][1].animations.frame == 52){
-			card[0][1].animations.frame = card[0][0].animations.frame;
-			card[0][0].animations.frame = 52;
+function randomizer(){
+
+	var random1 = Math.floor(Math.random()*2);
+	var random2 = Math.floor(Math.random()*3);
+	var random3 = Math.floor(Math.random()*2);
+	var random4 = Math.floor(Math.random()*3);
+	var random5 = Math.floor(Math.random()*4);
+	var random6 = Math.floor(Math.random()*3);
+	var random7 = Math.floor(Math.random()*2);
+	var random8 = Math.floor(Math.random()*3);
+	var random9 = Math.floor(Math.random()*2);
+	
+	if (emptySquare == card[0][0]){
+		if (random1 == 0){
+			card[0][0].animations.frame = card[0][1].animations.frame;
+			card[0][1].animations.frame = 52;
+			emptySquare = card[0][1];
 		}
-		else if (card[1][0].animations.frame == 52){
-			card[1][0].animations.frame = card[0][0].animations.frame;
-			card[0][0].animations.frame = 52;
+		else if (random1 == 1){
+			card[0][0].animations.frame = card[1][0].animations.frame;
+			card[1][0].animations.frame = 52;
+			emptySquare = card[1][0];
 		}
 	} 
 	
-	else if (sprite == card[0][1]){
-		if (card[0][0].animations.frame == 52){
-			card[0][0].animations.frame = card[0][1].animations.frame;
-			card[0][1].animations.frame = 52;
-		}
-		else if (card[1][1].animations.frame == 52){
-			card[1][1].animations.frame = card[0][1].animations.frame;
-			card[0][1].animations.frame = 52;
-		}
-		else if (card[0][2].animations.frame == 52){
-			card[0][2].animations.frame = card[0][1].animations.frame;
-			card[0][1].animations.frame = 52;
-		}
-	}
-	
-	else if (sprite == card[0][2]){
-		if (card[0][1].animations.frame == 52){
+	else if (emptySquare == card[0][1]){
+		if (random2 == 0){
 			card[0][1].animations.frame = card[0][2].animations.frame;
 			card[0][2].animations.frame = 52;
+			emptySquare = card[0][2];
 		}
-		else if (card[1][2].animations.frame == 52){
-			card[1][2].animations.frame = card[0][2].animations.frame;
-			card[0][2].animations.frame = 52;
-		}
-	}
-	
-	else if (sprite == card[1][0]){
-		if (card[1][1].animations.frame == 52){
-			card[1][1].animations.frame = card[1][0].animations.frame;
-			card[1][0].animations.frame = 52;
-		}
-		else if (card[0][0].animations.frame == 52){
-			card[0][0].animations.frame = card[1][0].animations.frame;
-			card[1][0].animations.frame = 52;
-		}
-		else if (card[2][0].animations.frame == 52){
-			card[2][0].animations.frame = card[1][0].animations.frame;
-			card[1][0].animations.frame = 52;
-		}
-	}
-	
-	else if (sprite == card[1][1]){
-		if (card[1][0].animations.frame == 52){
-			card[1][0].animations.frame = card[1][1].animations.frame;
-			card[1][1].animations.frame = 52;
-		}
-		else if (card[1][2].animations.frame == 52){
-			card[1][2].animations.frame = card[1][1].animations.frame;
-			card[1][1].animations.frame = 52;
-		}
-		else if (card[0][1].animations.frame == 52){
+		else if (random2 == 1){
 			card[0][1].animations.frame = card[1][1].animations.frame;
 			card[1][1].animations.frame = 52;
+			emptySquare = card[1][1];
 		}
-		else if (card[2][1].animations.frame == 52){
-			card[2][1].animations.frame = card[1][1].animations.frame;
-			card[1][1].animations.frame = 52;
+		if (random2 == 2){
+			card[0][1].animations.frame = card[0][0].animations.frame;
+			card[0][0].animations.frame = 52;
+			emptySquare = card[0][0];
 		}
 	}
 	
-	else if (sprite == card[1][2]){
-		if (card[0][2].animations.frame == 52){
+	else if (emptySquare == card[0][2]){
+		if (random3 == 0){
 			card[0][2].animations.frame = card[1][2].animations.frame;
 			card[1][2].animations.frame = 52;
+			emptySquare = card[1][2];
 		}
-		else if (card[1][1].animations.frame == 52){
-			card[1][1].animations.frame = card[1][2].animations.frame;
-			card[1][2].animations.frame = 52;
+		else if (random3 == 1){
+			card[0][2].animations.frame = card[0][1].animations.frame;
+			card[0][1].animations.frame = 52;
+			emptySquare = card[0][1];
 		}
-		else if (card[2][2].animations.frame == 52){
-			card[2][2].animations.frame = card[1][2].animations.frame;
-			card[1][2].animations.frame = 52;
-		}
+		
 	}
-	else if (sprite == card[2][0]){
-		if (card[1][0].animations.frame == 52){
+	
+	else if (emptySquare == card[1][0]){
+		if (random4 == 0){
+			card[1][0].animations.frame = card[0][0].animations.frame;
+			card[0][0].animations.frame = 52;
+			emptySquare = card[0][0];
+		}
+		else if (random4 == 1){
+			card[1][0].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+			emptySquare = card[1][1];
+		}
+		else if (random4 == 2){
 			card[1][0].animations.frame = card[2][0].animations.frame;
 			card[2][0].animations.frame = 52;
-		}
-		else if (card[2][1].animations.frame == 52){
-			card[2][1].animations.frame = card[2][0].animations.frame;
-			card[2][0].animations.frame = 52;
+			emptySquare = card[2][0];
 		}
 	}
 	
-	else if (sprite == card[2][1]){
-		if (card[2][0].animations.frame == 52){
-			card[2][0].animations.frame = card[2][1].animations.frame;
-			card[2][1].animations.frame = 52;
+	else if (emptySquare == card[1][1]){
+		if (random5 == 0){
+			card[1][1].animations.frame = card[1][0].animations.frame;
+			card[1][0].animations.frame = 52;
+			emptySquare = card[1][0];
 		}
-		else if (card[1][1].animations.frame == 52){				
+		else if (random5 == 1){
+			card[1][1].animations.frame = card[0][1].animations.frame;
+			card[0][1].animations.frame = 52;
+			emptySquare = card[0][1];
+		}
+		else if (random5 == 2){
+			card[1][1].animations.frame = card[1][2].animations.frame;
+			card[1][2].animations.frame = 52;
+			emptySquare = card[1][2];
+		}
+		else if (random5 == 3){
 			card[1][1].animations.frame = card[2][1].animations.frame;
 			card[2][1].animations.frame = 52;
-		}
-		else if (card[2][2].animations.frame == 52){
-			card[2][2].animations.frame = card[2][1].animations.frame;
-			card[2][1].animations.frame = 52;
+			emptySquare = card[2][1];
 		}
 	}
 	
-	else if (sprite == card[2][2]){
-		if (card[2][1].animations.frame == 52){
-			card[2][1].animations.frame = card[2][2].animations.frame;
-			card[2][2].animations.frame = 52;
-		}
-		else if (card[1][2].animations.frame == 52){
+	else if (emptySquare == card[1][2]){
+		if (random6 == 0){
 			card[1][2].animations.frame = card[2][2].animations.frame;
 			card[2][2].animations.frame = 52;
+			emptySquare = card[2][2];
+		}
+		else if (random6 == 1){
+			card[1][2].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+			emptySquare = card[1][1];
+		}
+		else if (random6 == 2){
+			card[1][2].animations.frame = card[0][2].animations.frame;
+			card[0][2].animations.frame = 52;
+			emptySquare = card[0][2];
+		}
+		
+	}
+	else if (emptySquare == card[2][0]){
+		if (random7 == 0){
+			card[2][0].animations.frame = card[1][0].animations.frame;
+			card[1][0].animations.frame = 52;
+			emptySquare = card[1][0];
+		}
+		else if (random7 == 1){
+			card[2][0].animations.frame = card[2][1].animations.frame;
+			card[2][1].animations.frame = 52;
+			emptySquare = card[2][1];
 		}
 	}
+	
+	else if (emptySquare == card[2][1]){
+		if (random8 == 0){
+			card[2][1].animations.frame = card[2][0].animations.frame;
+			card[2][0].animations.frame = 52;
+			emptySquare = card[2][0];
+		}
+		else if (random8 == 1){				
+			card[2][1].animations.frame = card[1][1].animations.frame;
+			card[1][1].animations.frame = 52;
+			emptySquare = card[1][1];
+		}
+		else if (random8 == 2){
+			card[2][1].animations.frame = card[2][2].animations.frame;
+			card[2][2].animations.frame = 52;
+			emptySquare = card[2][2];
+		}
+	}
+	
+	else if (emptySquare == card[2][2]){
+		if (random9 == 0){
+			card[2][2].animations.frame = card[2][1].animations.frame;
+			card[2][1].animations.frame = 52;
+			emptySquare = card[2][1];
+		}
+		else if (random9 == 1){
+			card[2][2].animations.frame = card[1][2].animations.frame;
+			card[1][2].animations.frame = 52;
+			emptySquare = card[1][2];
+		}
+	}
+	
 }
+
+//----------------------------------------------------------------------------------------
 
 function clickToRestart(){
 	resetScores();
 	music.stop();
 	game.state.restart();
 }
+
+//----------------------------------------------------------------------------------------
 
 function resetScores(){
     moves = 0;

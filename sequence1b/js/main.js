@@ -116,36 +116,26 @@ function create() {
    		}
    	}
    	
+   	//------------------------------------------------------------------------------------
+   	
    	movesText = game.add.text(game.world.centerX-100, 20, 'Moves: 0', { fontSize: '40px', fill: '#fF0', align: "center"  });
    	text = game.add.text(game.world.centerX-350, 100, '', { fontSize: '40px', fill: '#228bff', align: "center"  });
    	
 	//------------------------------------------------------------------------------------
 	
-   	//------------------------------------------------------------------------------------
-    
-    //------------------------------------------------------------------------------------
-    
     restartButton = game.input.keyboard.addKey(Phaser.KeyCode.ENTER);
-    
-    //------------------------------------------------------------------------------------
-    
     
 }
 
 //----------------------------------------------------------------------------------------
 
-//function update() {}
-
 function update() {
 
 	movesText.text = "Moves: " + moves;
     
-    //the "click to restart" handler
-    //game.input.onTap.addOnce(function() { resetScores();music.stop();game.state.restart();}, this);
-    
     if (complete === true){
         //the "press ENTER to restart" handler
-        if (restartButton.isDown) {resetScores();game.state.restart();}
+        if (restartButton.isDown) {resetScores();music.stop();game.state.restart();}
     }
 }
 

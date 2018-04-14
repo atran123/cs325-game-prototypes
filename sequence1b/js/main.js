@@ -419,7 +419,6 @@ function randomizer(sprite){
 		else if (card[1][1].animations.frame == 52){				
 			card[1][1].animations.frame = card[2][1].animations.frame;
 			card[2][1].animations.frame = 52;
-			moves++;
 		}
 		else if (card[2][2].animations.frame == 52){
 			card[2][2].animations.frame = card[2][1].animations.frame;
@@ -431,7 +430,6 @@ function randomizer(sprite){
 		if (card[2][1].animations.frame == 52){
 			card[2][1].animations.frame = card[2][2].animations.frame;
 			card[2][2].animations.frame = 52;
-			moves++;
 		}
 		else if (card[1][2].animations.frame == 52){
 			card[1][2].animations.frame = card[2][2].animations.frame;

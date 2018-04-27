@@ -33,7 +33,6 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('bg', 'assets/light1.jpg');
 			game.load.image('play', 'assets/play.png');
 			game.load.image('start', 'assets/start.png');
-			game.load.image('reset', 'assets/reset.png');
 			game.load.image('menu', 'assets/menu.png');
 			game.load.image('exit', 'assets/exit.png');
 			game.load.image('score', 'assets/score.png');

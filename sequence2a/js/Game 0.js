@@ -2,7 +2,7 @@
 
 GameStates.makeGame = function( game, shared ) {
     // Create your own variables.
-    var menu, exit, start;
+    var reset, menu, exit, start;
 	var background, music;
 	var scoresText, timeText, text; 
 	var scores, time, counter, timer, countdown;
@@ -153,6 +153,19 @@ GameStates.makeGame = function( game, shared ) {
         game.state.start('MainMenu');
     }
     
+    function resetGame() {
+        //  Here you should destroy anything you no longer need.
+        //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
+        //resetScores();
+        
+		music.stop();
+        //  Then restart game
+        game.state.restart();
+        scores = 0;
+        time = 8;
+        counter = time;
+    }
+    
     function startGame() {
     	// set the scores and time
     	scores = 0;
@@ -293,7 +306,7 @@ GameStates.makeGame = function( game, shared ) {
 			dog.animations.play('pant', 30, true);
 			
 			// Create a sprite at the left of the screen using the 'start' image.
-            start = game.add.sprite(270, 570, 'start' );
+            start = game.add.sprite(210, 570, 'start' );
             // Anchor the sprite at its center, as opposed to its top-left corner.
             // so it will be truly centered.
             start.anchor.setTo( 0.5, 0.5 );
@@ -301,9 +314,19 @@ GameStates.makeGame = function( game, shared ) {
             // When you click on the sprite, you start the game.
             start.inputEnabled = true;
             start.events.onInputDown.add( function() { startGame(); }, this );
+			
+            // Create a sprite next to start using the 'reset' image.
+            reset = game.add.sprite(320, 570, 'reset' );
+            // Anchor the sprite at its center, as opposed to its top-left corner.
+            // so it will be truly centered.
+            reset.anchor.setTo( 0.5, 0.5 );
+            
+            // When you click on the sprite, you restart the game.
+            reset.inputEnabled = true;
+            reset.events.onInputDown.add( function() { resetGame(); }, this );
             
             // Create a sprite at before the exit using the 'menu' image.
-            menu = game.add.sprite(440, 570, 'menu' );
+            menu = game.add.sprite(460, 570, 'menu' );
             // Anchor the sprite at its center, as opposed to its top-left corner.
             // so it will be truly centered.
             menu.anchor.setTo( 0.5, 0.5 );
@@ -313,7 +336,7 @@ GameStates.makeGame = function( game, shared ) {
             menu.events.onInputDown.add( function() { mainMenu(); }, this );
             
             // Create a sprite at the left of the screen using the 'exit' image.
-            exit = game.add.sprite(570, 570, 'exit' );
+            exit = game.add.sprite(590, 570, 'exit' );
             // Anchor the sprite at its center, as opposed to its top-left corner.
             // so it will be truly centered.
             exit.anchor.setTo( 0.5, 0.5 );

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Digital 8</title>
+    <script src="js/phaser.min.js"></script>
+	<!-- Boot.js must come first since it creates the BasicGame object
+	that stores all the states. -->
+	<script src="js/Boot.js"></script>
+	<script src="js/Preloader.js"></script>
+	<script src="js/MainMenu.js"></script>
+	<script src="js/Game.js"></script>
+	<script src="js/Exit.js"></script>
+	<script src="js/Score.js"></script>
+	<!-- main.js must come last since it references the other ones. -->
+	<script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Dodge the Dog</h2>
+<ul>
+
+<li><strong>High Concept:</strong>
+2-player chess type game. Chess type game.
+</li>
+
+<li><strong>Theme:</strong>
+Chess.
+</li>
+
+<li><strong>Mandated Variety:</strong>
+Input: Mouse. Play style: Single player vs. Computer.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+Have fun. The goal of the game is to avoid moving across the dog, or running out of time, and to press your opponent into one of those 2 conditions
+</li>
+
+<li><strong>Gameplay:</strong>
+Each side will have 2 pieces, on a simple board. Computer's pieces are purple.  Player's pieces are green.  Player's pieces are at bottom.  Player's left piece goes first.  One piece can be moved per turn.
+Chess pieces can be moved horizontally, vertically, or diagonally to an empty position.
+Player start with a time limit of 8 seconds to move.  Each successful move earns a point.  As the score goes up, the time limit will gradually goes down to 1 second. 
+
+The player or computer loses when he/she has no choice but to move a piece across the dog, or time is up.
+
+</li>
+
+<li><strong>Target Audience:</strong>
+All.
+</li>
+
+<li><strong>Play Time:</strong>
+3-5 minute.
+</li>
+
+<li><strong>Strategies:</strong>
+Try to press both pieces of your opponent into 1 side of the board, and try to avoid being pressed to 1 side.
+</li>
+<li><strong>Originality:</strong>
+The game strategy. Can move a piece by just clicking on it, no need to slide it. Decreasing time with increasing score.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+What did you learn from this prototype: developing the game with states, chess algorithm.
+What was the easiest or hardest part of making it. Hard part: graphics and computer algorithm.
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Borrowed from the internet and the template. Sources: google.
+<ul>
+	<li>Buttons: created with online tools from <a href="http://buttonoptimizer.com/#">Free Button Creator</a></li>
+	<li>Music: <a href="http://www.soundclick.com/bands/default.cfm?bandID=1053765">Casino</a></li>
+	<li>Sprite Sheet: <a href="http://24.media.tumblr.com/tumblr_md1a8v4nzF1qgd7tso1_500.gif">Dog</a></li>
+	<li>Game Background: <a href="https://www.google.com/search?q=light+background&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjcttjj5dnaAhUmmuAKHU2vDHsQ_AUoAXoECAAQAw&biw=1338&bih=693#imgrc=yRxzFfccAqtOvM:">Background</a></li>
+	<li>Menu Background: <a href="https://www.google.com/search?biw=1338&bih=737&tbm=isch&sa=1&ei=LXfiWqTUI7Lp_QbB2paQCA&q=cartoon+dog+backgrounds&oq=cartoon+dog+backgrounds&gs_l=psy-ab.3..0j0i5i30k1.75018.77678.0.77995.8.8.0.0.0.0.84.577.8.8.0....0...1c.1.64.psy-ab..0.8.576...0i13k1j0i7i30k1j0i7i5i30k1j0i8i7i30k1.0.9rm8bdevoz0#imgdii=2CcgOZdylOT6iM:&imgrc=vppGeoZcRzI4jM:">Bolt the Dog</a></li>
+	<li>Boot Background: <a href="https://www.google.com/search?biw=1117&bih=692&tbm=isch&sa=1&ei=plDSWquLH43q_Ab-8bX4CA&q=nice+backgrounds+800x600&oq=nice+backgrounds+800x600&gs_l=psy-ab.3...86333.88819.0.89038.8.8.0.0.0.0.82.539.8.8.0....0...1c.1.64.psy-ab..0.1.81...0j0i67k1.0.SbXPPtasSD0#imgrc=VD4CBBKffF85-M:">Ocean</a></li>
+</ul>
+</li>
+<li><strong>Prototype Closest Other Game:</strong>
+Which other game most closely resembles your game? None.</li>
+
+<ul>
+</ul>
+</li>
+</ul>
+</div>
+</body>
+</html>

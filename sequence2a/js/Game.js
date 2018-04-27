@@ -224,7 +224,10 @@ GameStates.makeGame = function( game, shared ) {
 		// Stop the timer when the delayed event triggers
 		game.time.events.remove(countdown);
 		game.time.events.remove(timer);
-		//change text
+		// disable input and click events on sprites
+    	human1.inputEnabled = false;
+		human2.inputEnabled = false;
+		// change text
 		text.text = "YOU LOST!";
 		text.visible = true;
 		music.stop();

@@ -16,7 +16,8 @@ window.onload = function() {
 	game.state.add( 'Boot', GameStates.makeBoot( game ) );
 	game.state.add( 'Preloader', GameStates.makePreloader( game ) );
 	game.state.add( 'MainMenu', GameStates.makeMainMenu( game, shared ) );
-	game.state.add( 'Game', GameStates.makeGame( game, shared ) );
+	game.state.add( 'Easy', GameStates.makeEasy( game, shared ) );
+	game.state.add( 'Hard', GameStates.makeHard( game, shared ) );
 	game.state.add( 'Exit', GameStates.makeExit( game, shared ) );
 	game.state.add( 'Score', GameStates.makeScore( game, shared ) );
 

@@ -419,21 +419,39 @@ GameStates.makeEasy = function( game, shared ) {
     	} 
 	}
 	
-	// this is the computer algorithm of the chess game
+	// this is a  simple computer algorithm of the chess game
+	// computer will randomly pick 1 of the 2 pieces and move to the empty position
+	// it does not calculate the best move. The move may lead computer to a loss.
 	function compTurn(){
+	
+		var random = Math.floor(Math.random()*2);
 		
-		compMove(comp1);
-		if (compSuccessMove){
-			compSuccessMove = false;
-		} 
+		if (random == 0){
+			compMove(comp1);
+			if (compSuccessMove){
+				compSuccessMove = false;
+			} 
+			else {
+				compMove(comp2);
+				if (compSuccessMove)
+					compSuccessMove = false;
+				else
+					compLost = true;
+			}
+		}
 		else {
 			compMove(comp2);
-			if (compSuccessMove)
+			if (compSuccessMove){
 				compSuccessMove = false;
-			else
-				compLost = true;
+			} 
+			else {
+				compMove(comp1);
+				if (compSuccessMove)
+					compSuccessMove = false;
+				else
+					compLost = true;
+			}
 		}
-		
 	}
     
     return {  // Begin game state functions ----------------------------------------------

@@ -35,6 +35,7 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('hard', 'assets/hard.png');
 			game.load.image('start', 'assets/start.png');
 			game.load.image('menu', 'assets/menu.png');
+			game.load.image('menu_score', 'assets/menu_score.png');
 			game.load.image('exit', 'assets/exit.png');
 			game.load.image('score', 'assets/score.png');
 			game.load.image('exit_main', 'assets/exit_main.png');

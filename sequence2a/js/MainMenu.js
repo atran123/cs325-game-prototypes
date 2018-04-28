@@ -72,7 +72,7 @@ GameStates.makeMainMenu = function( game, shared ) {
             
             playEasy = game.add.button(130, 170, 'easy', startEasy, null);
             playHard = game.add.button(130, 265, 'hard', startHard, null);
-            Score = game.add.button(260, 360, 'score', startScore, null);
+            Score = game.add.button(190, 360, 'score', startScore, null);
             Exit = game.add.button(320, 450, 'exit_main', startExit, null);
         },
     

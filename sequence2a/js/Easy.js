@@ -2,16 +2,18 @@
 
 GameStates.makeEasy = function( game, shared ) {
     // Create your own variables.
+    var successMove = false;
+	var compSuccessMove = false;
+	var position = [];
+	var localStorageName = "scoreMem";
+	var highScore;
     var menu, exit, start;
 	var background, music, bark, click;
-	var scoresText, timeText, text; 
-	var scores, time, counter, timer, countdown, randomDog;
+	var scoreText, timeText, text; 
+	var score, time, counter, timer, countdown;
+	var randomDog;
 	var board, comp1, comp2, human1, human2, dog, pant;
-	var position = [];
-	var compLost;
-	var successMove = false;
-	var compSuccessMove = false;
-	var firstMove;
+	var compLost, firstMove;
     
     // Handle clicking events on the cards ----------------------------------------------
     function listener (sprite) {
@@ -24,21 +26,21 @@ GameStates.makeEasy = function( game, shared ) {
 				position[2] = 1;
 				position[0] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if ( (position[1]==0) && (!((dog.x==400)&&(dog.y==100))) ){
 				sprite.x = 580; 
 				sprite.y = 130;
 				position[1] = 1;
 				position[0] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if ( (position[3]==0) && (!((dog.x==200)&&(dog.y==280))) ){
 				sprite.x = 220; 
 				sprite.y = 460;
 				position[3] = 1;
 				position[0] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			}
 			firstMove = false;
 		}
@@ -51,21 +53,21 @@ GameStates.makeEasy = function( game, shared ) {
 				position[2] = 1;
 				position[1] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if ( (position[0]==0) && (!((dog.x==400)&&(dog.y==100))) ){
 				sprite.x = 220; 
 				sprite.y = 130;
 				position[0] = 1;
 				position[1] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if ( (position[4]==0) && (!((dog.x==560)&&(dog.y==280))) ){
 				sprite.x = 580; 
 				sprite.y = 460;
 				position[4] = 1;
 				position[1] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			}
 			firstMove = false;
     	}
@@ -79,21 +81,21 @@ GameStates.makeEasy = function( game, shared ) {
 					position[2] = 1;
 					position[3] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				} else if ( (position[0]==0) && (!((dog.x==200)&&(dog.y==280))) ){
 					sprite.x = 220; 
 					sprite.y = 130;
 					position[0] = 1;
 					position[3] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				} else if ( (position[4]==0) && (!((dog.x==400)&&(dog.y==440))) ){
 					sprite.x = 580; 
 					sprite.y = 460;
 					position[4] = 1;
 					position[3] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				}
 				firstMove = false;
 			}
@@ -108,21 +110,21 @@ GameStates.makeEasy = function( game, shared ) {
 					position[2] = 1;
 					position[4] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				} else if ( (position[1]==0) && (!((dog.x==560)&&(dog.y==280))) ){
 					sprite.x = 580; 
 					sprite.y = 130;
 					position[1] = 1;
 					position[4] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				} else if ( (position[3]==0) && (!((dog.x==400)&&(dog.y==440))) ){
 					sprite.x = 220; 
 					sprite.y = 460;
 					position[3] = 1;
 					position[4] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				}
 				firstMove = false;
 			} 
@@ -136,28 +138,28 @@ GameStates.makeEasy = function( game, shared ) {
 				position[0] = 1;
 				position[2] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if (position[1]==0){
 				sprite.x = 580; 
 				sprite.y = 130;
 				position[1] = 1;
 				position[2] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if (position[3]==0){
 				sprite.x = 220; 
 				sprite.y = 460;
 				position[3] = 1;
 				position[2] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if (position[4]==0){
 				sprite.x = 580; 
 				sprite.y = 460;
 				position[4] = 1;
 				position[2] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			}
     	}
     	
@@ -182,15 +184,15 @@ GameStates.makeEasy = function( game, shared ) {
         //  Here you should destroy anything you no longer need.
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
         //resetScores();
-        scores = 0;
+        score = 0;
 		music.stop();
         //  Then let's go back to the main menu.
         game.state.start('MainMenu');
     }
     
     function startGame() {
-    	// set the scores and time
-    	scores = 0;
+    	// set the score and time
+    	score = 0;
         time = 8;
         counter = time;
         firstMove = true;
@@ -292,7 +294,7 @@ GameStates.makeEasy = function( game, shared ) {
     }
     
     function exitGame() {
-    	scores = 0;
+    	score = 0;
     	//	Ok, the Exit Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
         music.stop();
         //	And exit game
@@ -310,6 +312,8 @@ GameStates.makeEasy = function( game, shared ) {
 		text.text = "YOU LOST!";
 		text.visible = true;
 		// music.stop();
+		
+		saveHighScore();
 	}
 	
 	function playerWon(){
@@ -323,6 +327,8 @@ GameStates.makeEasy = function( game, shared ) {
 		text.text = "YOU WON!";
 		text.visible = true;
 		// music.stop();
+		
+		saveHighScore();
 	}
 	
 	function updateCounter() {
@@ -487,6 +493,24 @@ GameStates.makeEasy = function( game, shared ) {
 			}
 		}
 	}
+	
+	function getHighScore(){
+		// retrieve high score from local storage
+			if(localStorage.getItem(localStorageName) == null) {
+				highScore = 0;
+			} else {
+				highScore = localStorage.getItem(localStorageName);
+			}
+	}
+	
+	function saveHighScore(){
+		// compare score to current high score
+		// if score is higher than current high score
+		// set it to high score and save to local storage
+		highScore = Math.max(score, highScore);
+		localStorage.setItem(localStorageName, highScore);
+	}
+	
     
     return {  // Begin game state functions ----------------------------------------------
     
@@ -580,47 +604,51 @@ GameStates.makeEasy = function( game, shared ) {
             menu.events.onInputDown.add( function() { mainMenu(); }, this );	
             
             // Add some text using a CSS style.
-            scoresText = game.add.text(game.world.centerX, 10, '');
-            scoresText.anchor.setTo( 0.5, 0.0 );
-            scoresText.align = 'center';
+            scoreText = game.add.text(game.world.centerX, 10, '');
+            scoreText.anchor.setTo( 0.5, 0.0 );
+            scoreText.align = 'center';
             
             //  Font style
-			scoresText.font = 'Arial Black';
-			scoresText.fontSize = 40;
-			scoresText.fontWeight = 'bold';
-			scoresText.fill = '#030bfc';
+			scoreText.font = 'Arial Black';
+			scoreText.fontSize = 40;
+			scoreText.fontWeight = 'bold';
+			scoreText.fill = '#030bfc';
 		
 			// text shadow
-			scoresText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+			scoreText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 			
-			scores = 0;
+			score = 0;
+			getHighScore();
         },
     
         update: function () {
         	if (compLost){
         		playerWon();
         	}
-            scoresText.text = "Scores: " + scores;
+        	
+        	// update score text
+            scoreText.text = "Score: " + score;
             
-            if (scores >=100){
+            // decrease time limit as score increases
+            if (score >=50){
             	time = 1;
             }
-            else if (scores >=70){
+            else if (score >=34){
             	time = 2;
             }
-			else if (scores >=50){
+			else if (score >=26){
 				time = 3;
             }
-			else if (scores >=40){
+			else if (score >=22){
 				time = 4;
             }
-			else if (scores >=30){
+			else if (score >=18){
 				time = 5;
             }
-			else if (scores >=20){
+			else if (score >=14){
 				time = 6;
             }
-			else if (scores >=10){
+			else if (score >=8){
 				time = 7;
             }
         }

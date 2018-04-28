@@ -22,7 +22,8 @@ GameStates.makeScore = function( game, shared ) {
 			// var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
 			// var text = game.add.text( game.world.centerX, 15, "Not yet implemented! Refresh browser to reload game.", style );
 			
-			var text = game.add.text( game.world.centerX, 15, "Have a nice day! Refresh browser to reload game.")
+			var text = game.add.text( game.world.centerX, 15, "Not yet implemented! Refresh browser to reload game");
+			text.align = 'center';
 			
 			//  Font style
 			text.font = 'Verdana';
@@ -30,7 +31,7 @@ GameStates.makeScore = function( game, shared ) {
 			text.fontWeight = 'bold';
 			text.fill = '#9999ff';
 			
-			text.setShadow(5, 5, 'rgba(0,0,0,0.9)', 15);
+			text.setShadow(3, 3, 'rgba(255,255,255,0.9)', 10);
 			text.anchor.setTo( 0.5, 0.0 );
 		},
 	

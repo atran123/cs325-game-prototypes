@@ -25,7 +25,7 @@ GameStates.makePreloader = function( game ) {
             //	As this is just a Project Template I've not provided these assets, swap them for your own.
             game.load.image('titlePage', 'assets/dog_bg.jpg');
             //game.load.atlas('playButton', 'assets/play_button.png', 'assets/play_button.json');
-            game.load.audio('titleMusic', ['assets/Poppers and Prosecco.mp3']);
+            game.load.audio('titleMusic', ['assets/Game-Menu.mp3']);
             //	+ lots of other required assets here
             game.load.spritesheet('cards', 'assets/cards.gif', 81, 81);
             game.load.spritesheet('dog', 'assets/dog.png', 102, 81.5, 4);
@@ -43,6 +43,7 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('human', 'assets/human.png');
 			game.load.audio('gameMusic', ['assets/casino.mp3']);
 			game.load.audio('bark', ['assets/bark.mp3']);
+			game.load.audio('click', ['assets/push.mp3']);
         },
     
         create: function () {

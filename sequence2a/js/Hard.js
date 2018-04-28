@@ -3,7 +3,7 @@
 GameStates.makeHard = function( game, shared ) {
     // Create your own variables.
     var menu, exit, start;
-	var background, music, bark;
+	var background, music, bark, click;
 	var scoresText, timeText, text; 
 	var scores, time, counter, timer, countdown, randomDog;
 	var board, comp1, comp2, human1, human2, dog, pant;
@@ -163,6 +163,7 @@ GameStates.makeHard = function( game, shared ) {
     	
     	if (successMove){
 			// computer's turn to go
+			click.play();
 			compTurn();
 		
 			game.time.events.remove(countdown);
@@ -501,6 +502,7 @@ GameStates.makeHard = function( game, shared ) {
 			music.play();
 			
 			bark = game.add.audio('bark');
+			click = game.add.audio('click');
             
             //  A simple background for our game
 			background = game.add.sprite( 0, 0, 'bg' );

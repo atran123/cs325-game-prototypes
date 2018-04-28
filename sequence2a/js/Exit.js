@@ -19,8 +19,17 @@ GameStates.makeExit = function( game, shared ) {
 		
 			// Add some text using a CSS style.
 			// Center it in X, and position its top 15 pixels from the top of the world.
-			var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-			var text = game.add.text( game.world.centerX, 15, "Have a nice day! Refresh browser to reload game.", style );
+			var text = game.add.text( game.world.centerX, 15, "Have a nice day! Refresh browser to reload game");
+			text.anchor.setTo( 0.5, 0.0 );
+			text.align = 'center';
+			
+			//  Font style
+			text.font = 'Verdana';
+			text.fontSize = 25;
+			text.fontWeight = 'bold';
+			text.fill = '#9999ff';
+			
+			text.setShadow(3, 3, 'rgba(255,255,255,0.9)', 10);
 			text.anchor.setTo( 0.5, 0.0 );
 		},
 	

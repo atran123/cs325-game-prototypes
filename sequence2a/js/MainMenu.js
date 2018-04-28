@@ -47,8 +47,18 @@ GameStates.makeMainMenu = function( game, shared ) {
         	
         	// Add some text using a CSS style.
 			// Center it in X, and position its top 50 pixels from the top of the world.
-        	text = game.add.text(game.world.centerX-200, 80, 'Main Menu', { fontSize: '60px', fill: '#fF0', align: "center"  });
+        	text = game.add.text(game.world.centerX-200, 80, 'Main Menu');
         	text.anchor.setTo( 0.5, 0.0 );
+        	text.align = 'center';
+        	
+        	//  Font style
+			text.font = 'Avenir Black';
+			text.fontSize = 60;
+			text.fontWeight = 'bold';
+			text.fill = '#FF0';
+	
+			// text shadow
+			text.setShadow(5, 5, 'rgba(255,0,0,0.5)', 0);
             
             playGame = game.add.button(290, 270, 'play', startGame, null);
             Score = game.add.button(290, 360, 'score', startScore, null);

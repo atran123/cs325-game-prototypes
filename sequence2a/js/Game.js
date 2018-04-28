@@ -9,6 +9,9 @@ GameStates.makeGame = function( game, shared ) {
 	var board, comp1, comp2, human1, human2, dog, pant;
 	var position = [];
 	var lost = false;
+	var compLost = false;
+	var successMove = false;
+	var compSuccessMove = false;
     
     // Handle clicking events on the cards ----------------------------------------------
     function listener (sprite) {
@@ -20,18 +23,21 @@ GameStates.makeGame = function( game, shared ) {
 				sprite.y = 300;
 				position[2] = 1;
 				position[0] = 0;
+				successMove = true;
 				scores ++;
 			} else if ( (position[1]==0) && (!((dog.x==400)&&(dog.y==100))) ){
 				sprite.x = 580; 
 				sprite.y = 130;
 				position[1] = 1;
 				position[0] = 0;
+				successMove = true;
 				scores ++;
 			} else if ( (position[3]==0) && (!((dog.x==200)&&(dog.y==280))) ){
 				sprite.x = 220; 
 				sprite.y = 460;
 				position[3] = 1;
 				position[0] = 0;
+				successMove = true;
 				scores ++;
 			}
 		}
@@ -43,18 +49,21 @@ GameStates.makeGame = function( game, shared ) {
 				sprite.y = 300;
 				position[2] = 1;
 				position[1] = 0;
+				successMove = true;
 				scores ++;
 			} else if ( (position[0]==0) && (!((dog.x==400)&&(dog.y==100))) ){
 				sprite.x = 220; 
 				sprite.y = 130;
 				position[0] = 1;
 				position[1] = 0;
+				successMove = true;
 				scores ++;
 			} else if ( (position[4]==0) && (!((dog.x==560)&&(dog.y==280))) ){
 				sprite.x = 580; 
 				sprite.y = 460;
 				position[4] = 1;
 				position[1] = 0;
+				successMove = true;
 				scores ++;
 			}
     	}
@@ -66,18 +75,21 @@ GameStates.makeGame = function( game, shared ) {
 				sprite.y = 300;
 				position[2] = 1;
 				position[3] = 0;
+				successMove = true;
 				scores ++;
 			} else if ( (position[0]==0) && (!((dog.x==200)&&(dog.y==280))) ){
 				sprite.x = 220; 
 				sprite.y = 130;
 				position[0] = 1;
 				position[3] = 0;
+				successMove = true;
 				scores ++;
 			} else if ( (position[4]==0) && (!((dog.x==400)&&(dog.y==440))) ){
 				sprite.x = 580; 
 				sprite.y = 460;
 				position[4] = 1;
 				position[3] = 0;
+				successMove = true;
 				scores ++;
 			}
     	}
@@ -89,18 +101,21 @@ GameStates.makeGame = function( game, shared ) {
 				sprite.y = 300;
 				position[2] = 1;
 				position[4] = 0;
+				successMove = true;
 				scores ++;
 			} else if ( (position[1]==0) && (!((dog.x==560)&&(dog.y==280))) ){
 				sprite.x = 580; 
 				sprite.y = 130;
 				position[1] = 1;
 				position[4] = 0;
+				successMove = true;
 				scores ++;
 			} else if ( (position[3]==0) && (!((dog.x==400)&&(dog.y==440))) ){
 				sprite.x = 220; 
 				sprite.y = 460;
 				position[3] = 1;
 				position[4] = 0;
+				successMove = true;
 				scores ++;
 			} 
     	}
@@ -112,35 +127,46 @@ GameStates.makeGame = function( game, shared ) {
 				sprite.y = 130;
 				position[0] = 1;
 				position[2] = 0;
+				successMove = true;
 				scores ++;
 			} else if (position[1]==0){
 				sprite.x = 580; 
 				sprite.y = 130;
 				position[1] = 1;
 				position[2] = 0;
+				successMove = true;
 				scores ++;
 			} else if (position[3]==0){
 				sprite.x = 220; 
 				sprite.y = 460;
 				position[3] = 1;
 				position[2] = 0;
+				successMove = true;
 				scores ++;
 			} else if (position[4]==0){
 				sprite.x = 580; 
 				sprite.y = 460;
 				position[4] = 1;
 				position[2] = 0;
+				successMove = true;
 				scores ++;
 			}
     	}
     	
-    	game.time.events.remove(countdown);
-		counter = time;
-		timeText.setText(counter);
-		countdown = game.time.events.loop(Phaser.Timer.SECOND, updateCounter, this);
+    	if (successMove){
+			// computer's turn to go
+			compTurn();
 		
-		game.time.events.remove(timer);
-		timer = game.time.events.add(Phaser.Timer.SECOND*time, endTimer, this);
+			game.time.events.remove(countdown);
+			counter = time;
+			timeText.setText(counter);
+			countdown = game.time.events.loop(Phaser.Timer.SECOND, updateCounter, this);
+		
+			game.time.events.remove(timer);
+			timer = game.time.events.add(Phaser.Timer.SECOND*time, endTimer, this);
+			
+			successMove = false;
+		}
 	}
     
     function mainMenu() {
@@ -187,15 +213,36 @@ GameStates.makeGame = function( game, shared ) {
     	if (timeText != null)
     		timeText.destroy();
     	// Add time text using a CSS style.
-		timeText = game.add.text(game.world.centerX, 180, counter, { fontSize: '30px', fill: '#E90524', align: "center"  });
+		timeText = game.add.text(game.world.centerX, 180, counter);
 		timeText.anchor.setTo( 0.5, 0.0 );
+		timeText.align = 'center';
 		
-		// remove old text
+		//  Font style
+		timeText.font = 'Arial Black';
+		timeText.fontSize = 30;
+		timeText.fontWeight = 'bold';
+		timeText.fill = '#E90524';
+	
+		// text shadow
+		timeText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		
+		// remove old message text
     	if (text != null)
     		text.destroy();
-    	// add new text
-    	text = game.add.text(game.world.centerX, 50, '', { fontSize: '40px', fill: '#057AE9', align: "center"  });
+    		
+    	// add new message text
+    	text = game.add.text(game.world.centerX, 50, '');
 		text.anchor.setTo( 0.5, 0.0 );
+		text.align = 'center';
+		
+		//  Font style
+		text.font = 'Arial Black';
+		text.fontSize = 40;
+		text.fontWeight = 'bold';
+		text.fill = '#f7fd29';
+		
+		// text shadow
+		text.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 		
 		// remove old countdown timer
 		if (countdown != null)
@@ -229,12 +276,164 @@ GameStates.makeGame = function( game, shared ) {
 		text.text = "YOU LOST!";
 		text.visible = true;
 		// music.stop();
-		lost = true;
+	}
+	
+	function playerWon(){
+		// Stop the timer when the delayed event triggers
+		game.time.events.remove(countdown);
+		game.time.events.remove(timer);
+		// temporarily disable input and click events on sprites
+    	human1.input.enabled = false;
+		human2.input.enabled = false;
+		// change text
+		text.text = "YOU WON!";
+		text.visible = true;
+		// music.stop();
 	}
 	
 	function updateCounter() {
 		counter --;
 		timeText.setText(counter);
+	}
+	
+	function compMove(sprite){
+		// if sprite at position 0
+    	if ((sprite.x == 220) && (sprite.y == 130)){
+    		if (position[2]==0){
+				sprite.x = 400; 
+				sprite.y = 300;
+				position[2] = 1;
+				position[0] = 0;
+				compSuccessMove = true;
+			} else if ( (position[1]==0) && (!((dog.x==400)&&(dog.y==100))) ){
+				sprite.x = 580; 
+				sprite.y = 130;
+				position[1] = 1;
+				position[0] = 0;
+				compSuccessMove = true;
+			} else if ( (position[3]==0) && (!((dog.x==200)&&(dog.y==280))) ){
+				sprite.x = 220; 
+				sprite.y = 460;
+				position[3] = 1;
+				position[0] = 0;
+				compSuccessMove = true;
+			}
+		}
+		
+		// if sprite at position 1
+		else if ((sprite.x == 580) && (sprite.y == 130)){
+    		if (position[2]==0){
+				sprite.x = 400; 
+				sprite.y = 300;
+				position[2] = 1;
+				position[1] = 0;
+				compSuccessMove = true;
+			} else if ( (position[0]==0) && (!((dog.x==400)&&(dog.y==100))) ){
+				sprite.x = 220; 
+				sprite.y = 130;
+				position[0] = 1;
+				position[1] = 0;
+				compSuccessMove = true;
+			} else if ( (position[4]==0) && (!((dog.x==560)&&(dog.y==280))) ){
+				sprite.x = 580; 
+				sprite.y = 460;
+				position[4] = 1;
+				position[1] = 0;
+				compSuccessMove = true;
+			}
+    	}
+		
+		// if sprite at position 3
+    	else if ((sprite.x == 220) && (sprite.y == 460)){
+    		if (position[2]==0){
+				sprite.x = 400; 
+				sprite.y = 300;
+				position[2] = 1;
+				position[3] = 0;
+				compSuccessMove = true;
+			} else if ( (position[0]==0) && (!((dog.x==200)&&(dog.y==280))) ){
+				sprite.x = 220; 
+				sprite.y = 130;
+				position[0] = 1;
+				position[3] = 0;
+				compSuccessMove = true;
+			} else if ( (position[4]==0) && (!((dog.x==400)&&(dog.y==440))) ){
+				sprite.x = 580; 
+				sprite.y = 460;
+				position[4] = 1;
+				position[3] = 0;
+				compSuccessMove = true;
+			}
+    	}
+    	
+    	// if sprite at position 4
+    	else if ((sprite.x == 580) && (sprite.y == 460)){
+    		if (position[2]==0){
+				sprite.x = 400; 
+				sprite.y = 300;
+				position[2] = 1;
+				position[4] = 0;
+				compSuccessMove = true;
+			} else if ( (position[1]==0) && (!((dog.x==560)&&(dog.y==280))) ){
+				sprite.x = 580; 
+				sprite.y = 130;
+				position[1] = 1;
+				position[4] = 0;
+				compSuccessMove = true;
+			} else if ( (position[3]==0) && (!((dog.x==400)&&(dog.y==440))) ){
+				sprite.x = 220; 
+				sprite.y = 460;
+				position[3] = 1;
+				position[4] = 0;
+				compSuccessMove = true;
+			} 
+    	}
+    	
+    	// if sprite at position 2
+    	else if ((sprite.x == 400) && (sprite.y == 300)){
+    		if (position[0]==0){
+				sprite.x = 220; 
+				sprite.y = 130;
+				position[0] = 1;
+				position[2] = 0;
+				compSuccessMove = true;
+			} else if (position[1]==0){
+				sprite.x = 580; 
+				sprite.y = 130;
+				position[1] = 1;
+				position[2] = 0;
+				compSuccessMove = true;
+			} else if (position[3]==0){
+				sprite.x = 220; 
+				sprite.y = 460;
+				position[3] = 1;
+				position[2] = 0;
+				compSuccessMove = true;
+			} else if (position[4]==0){
+				sprite.x = 580; 
+				sprite.y = 460;
+				position[4] = 1;
+				position[2] = 0;
+				compSuccessMove = true;
+			}
+    	} 
+	}
+	
+	// this is the computer algorithm of the chess game
+	function compTurn(){
+		
+		compMove(comp1);
+		if (compSuccessMove){
+			compSuccessMove = false;
+		} 
+		else {
+			compMove(comp2);
+			if (compSuccessMove)
+				compSuccessMove = false;
+			else
+				compLost = true;
+		}
+		
 	}
     
     return {  // Begin game state functions ----------------------------------------------
@@ -323,13 +522,25 @@ GameStates.makeGame = function( game, shared ) {
             exit.events.onInputDown.add( function() { exitGame(); }, this );	
             
             // Add some text using a CSS style.
-            scoresText = game.add.text(game.world.centerX, 10, 'Scores: 0', { fontSize: '40px', fill: '#2C3E50', align: "center"  });
+            scoresText = game.add.text(game.world.centerX, 10, '');
             scoresText.anchor.setTo( 0.5, 0.0 );
+            scoresText.align = 'center';
+            
+            //  Font style
+			scoresText.font = 'Arial Black';
+			scoresText.fontSize = 40;
+			scoresText.fontWeight = 'bold';
+			scoresText.fill = '#030bfc';
+		
+			// text shadow
+			scoresText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+			
+			scores = 0;
         },
     
         update: function () {
-        	if (lost){
-        		
+        	if (compLost){
+        		playerWon();
         	}
             scoresText.text = "Scores: " + scores;
             

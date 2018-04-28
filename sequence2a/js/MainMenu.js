@@ -3,17 +3,26 @@
 GameStates.makeMainMenu = function( game, shared ) {
 
 	var music = null;
-	var playGame = null;
+	var playEasy = null;
+	var playHard = null;
 	var Exit = null;
 	var Score = null;
 	var text = null;
 	
-    function startGame(pointer) {
+    function startEasy(pointer) {
         //	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
         music.stop();
 
         //	And start the actual game
-        game.state.start('Game');
+        game.state.start('Easy');
+    }
+    
+    function startHard(pointer) {
+        //	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
+        music.stop();
+
+        //	And start the actual game
+        game.state.start('Hard');
     }
     
     function startExit(pointer) {
@@ -47,7 +56,7 @@ GameStates.makeMainMenu = function( game, shared ) {
         	
         	// Add some text using a CSS style.
 			// Center it in X, and position its top 50 pixels from the top of the world.
-        	text = game.add.text(game.world.centerX-200, 80, 'Main Menu');
+        	text = game.add.text(game.world.centerX-150, 50, 'Dodge the Dog');
         	text.anchor.setTo( 0.5, 0.0 );
         	text.align = 'center';
         	
@@ -60,8 +69,9 @@ GameStates.makeMainMenu = function( game, shared ) {
 			// text shadow
 			text.setShadow(5, 5, 'rgba(255,0,0,0.5)', 0);
             
-            playGame = game.add.button(290, 270, 'play', startGame, null);
-            Score = game.add.button(290, 360, 'score', startScore, null);
+            playEasy = game.add.button(130, 170, 'easy', startEasy, null);
+            playHard = game.add.button(130, 265, 'hard', startHard, null);
+            Score = game.add.button(260, 360, 'score', startScore, null);
             Exit = game.add.button(320, 450, 'exit_main', startExit, null);
         },
     

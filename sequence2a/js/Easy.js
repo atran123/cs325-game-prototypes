@@ -3,15 +3,15 @@
 GameStates.makeEasy = function( game, shared ) {
     // Create your own variables.
     var menu, exit, start;
-	var background, music;
+	var background, music, bark;
 	var scoresText, timeText, text; 
-	var scores, time, counter, timer, countdown;
+	var scores, time, counter, timer, countdown, randomDog;
 	var board, comp1, comp2, human1, human2, dog, pant;
 	var position = [];
-	var lost = false;
-	var compLost = false;
+	var compLost;
 	var successMove = false;
 	var compSuccessMove = false;
+	var firstMove;
     
     // Handle clicking events on the cards ----------------------------------------------
     function listener (sprite) {
@@ -40,6 +40,7 @@ GameStates.makeEasy = function( game, shared ) {
 				successMove = true;
 				scores ++;
 			}
+			firstMove = false;
 		}
 		
 		// if sprite at position 1
@@ -66,57 +67,64 @@ GameStates.makeEasy = function( game, shared ) {
 				successMove = true;
 				scores ++;
 			}
+			firstMove = false;
     	}
 		
 		// if sprite at position 3
     	else if ((sprite.x == 220) && (sprite.y == 460)){
-    		if (position[2]==0){
-				sprite.x = 400; 
-				sprite.y = 300;
-				position[2] = 1;
-				position[3] = 0;
-				successMove = true;
-				scores ++;
-			} else if ( (position[0]==0) && (!((dog.x==200)&&(dog.y==280))) ){
-				sprite.x = 220; 
-				sprite.y = 130;
-				position[0] = 1;
-				position[3] = 0;
-				successMove = true;
-				scores ++;
-			} else if ( (position[4]==0) && (!((dog.x==400)&&(dog.y==440))) ){
-				sprite.x = 580; 
-				sprite.y = 460;
-				position[4] = 1;
-				position[3] = 0;
-				successMove = true;
-				scores ++;
+    		if (!((firstMove) && (dog.x==200) && (dog.y==280))){
+				if (position[2]==0){
+					sprite.x = 400; 
+					sprite.y = 300;
+					position[2] = 1;
+					position[3] = 0;
+					successMove = true;
+					scores ++;
+				} else if ( (position[0]==0) && (!((dog.x==200)&&(dog.y==280))) ){
+					sprite.x = 220; 
+					sprite.y = 130;
+					position[0] = 1;
+					position[3] = 0;
+					successMove = true;
+					scores ++;
+				} else if ( (position[4]==0) && (!((dog.x==400)&&(dog.y==440))) ){
+					sprite.x = 580; 
+					sprite.y = 460;
+					position[4] = 1;
+					position[3] = 0;
+					successMove = true;
+					scores ++;
+				}
+				firstMove = false;
 			}
     	}
     	
     	// if sprite at position 4
     	else if ((sprite.x == 580) && (sprite.y == 460)){
-    		if (position[2]==0){
-				sprite.x = 400; 
-				sprite.y = 300;
-				position[2] = 1;
-				position[4] = 0;
-				successMove = true;
-				scores ++;
-			} else if ( (position[1]==0) && (!((dog.x==560)&&(dog.y==280))) ){
-				sprite.x = 580; 
-				sprite.y = 130;
-				position[1] = 1;
-				position[4] = 0;
-				successMove = true;
-				scores ++;
-			} else if ( (position[3]==0) && (!((dog.x==400)&&(dog.y==440))) ){
-				sprite.x = 220; 
-				sprite.y = 460;
-				position[3] = 1;
-				position[4] = 0;
-				successMove = true;
-				scores ++;
+			if (!((firstMove) && (dog.x==560) && (dog.y==280))){
+				if (position[2]==0){
+					sprite.x = 400; 
+					sprite.y = 300;
+					position[2] = 1;
+					position[4] = 0;
+					successMove = true;
+					scores ++;
+				} else if ( (position[1]==0) && (!((dog.x==560)&&(dog.y==280))) ){
+					sprite.x = 580; 
+					sprite.y = 130;
+					position[1] = 1;
+					position[4] = 0;
+					successMove = true;
+					scores ++;
+				} else if ( (position[3]==0) && (!((dog.x==400)&&(dog.y==440))) ){
+					sprite.x = 220; 
+					sprite.y = 460;
+					position[3] = 1;
+					position[4] = 0;
+					successMove = true;
+					scores ++;
+				}
+				firstMove = false;
 			} 
     	}
     	
@@ -184,6 +192,8 @@ GameStates.makeEasy = function( game, shared ) {
     	scores = 0;
         time = 8;
         counter = time;
+        firstMove = true;
+        compLost = false;
         
         // Initialize position array
 		position[0] = 1;
@@ -208,7 +218,30 @@ GameStates.makeEasy = function( game, shared ) {
         	human1.input.enabled = true;
         if (human2.input.enabled != true)
         	human2.input.enabled = true;
-
+        	
+        // move the dog: (560, 280) right side, (400, 440) bottom
+		// (200, 280) left side, (400, 100) top
+		randomDog = Math.floor(Math.random()*4);
+		
+		if (randomDog == 0){
+			dog.x = 560;
+			dog.y = 280;
+		}
+		else if (randomDog == 1){
+			dog.x = 400;
+			dog.y = 440;
+		}
+		else if (randomDog == 2){
+			dog.x = 200;
+			dog.y = 280;
+		}
+		else {
+			dog.x = 400;
+			dog.y = 100;
+		}
+		
+		bark.play();
+			
         // remove old time text
     	if (timeText != null)
     		timeText.destroy();
@@ -420,7 +453,7 @@ GameStates.makeEasy = function( game, shared ) {
 	}
 	
 	// this is a  simple computer algorithm of the chess game
-	// computer will randomly pick 1 of the 2 pieces and move to the empty position
+	// computer will randomly pick 1 of the 2 pieces and move to the open position
 	// it does not calculate the best move. The move may lead computer to a loss.
 	function compTurn(){
 	
@@ -460,10 +493,14 @@ GameStates.makeEasy = function( game, shared ) {
     
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
             
+            randomDog = Math.floor(Math.random()*4);
+            
             // Add music
 			music = game.add.audio('gameMusic');
 			music.loop = true;
 			music.play();
+			
+			bark = game.add.audio('bark');
             
             //  A simple background for our game
 			background = game.add.sprite( 0, 0, 'bg' );
@@ -494,10 +531,11 @@ GameStates.makeEasy = function( game, shared ) {
 			human2.events.onInputDown.add(listener, this);
 			human2.input.enabled = false;
 			
-			// create a dog: (560,280) right side, (400, 440) bottom
-			// (200, 280) left side, (400, 100) top
-			dog = game.add.sprite(400, 440, 'dog');
+			dog = game.add.sprite(400, 280, 'dog')
 			dog.anchor.setTo(0.5,0.5);
+			
+			dog.inputEnabled = true;
+            dog.events.onInputDown.add( function() { bark.play(); }, this );
 			
 			//  Here we add a new animation called 'pant'
 			//  Because we didn't give any other parameters it's going to make an 

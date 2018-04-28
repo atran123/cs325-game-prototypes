@@ -42,6 +42,7 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('comp', 'assets/comp.png');
 			game.load.image('human', 'assets/human.png');
 			game.load.audio('gameMusic', ['assets/casino.mp3']);
+			game.load.audio('bark', ['assets/bark.mp3']);
         },
     
         create: function () {

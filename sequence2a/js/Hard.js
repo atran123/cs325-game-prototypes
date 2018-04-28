@@ -559,25 +559,25 @@ GameStates.makeHard = function( game, shared ) {
             start.inputEnabled = true;
             start.events.onInputDown.add( function() { startGame(); }, this );
             
-            // Create a sprite at before the exit using the 'menu' image.
-            menu = game.add.sprite(440, 570, 'menu' );
-            // Anchor the sprite at its center, as opposed to its top-left corner.
-            // so it will be truly centered.
-            menu.anchor.setTo( 0.5, 0.5 );
-            
-            // When you click on the sprite, you go back to the Main Menu.
-            menu.inputEnabled = true;
-            menu.events.onInputDown.add( function() { mainMenu(); }, this );
-            
-            // Create a sprite at the left of the screen using the 'exit' image.
-            exit = game.add.sprite(570, 570, 'exit' );
+            // Create a sprite at the between start and main menu using the 'exit' image.
+            exit = game.add.sprite(410, 570, 'exit' );
             // Anchor the sprite at its center, as opposed to its top-left corner.
             // so it will be truly centered.
             exit.anchor.setTo( 0.5, 0.5 );
             
             // When you click on the sprite, you go back to the Main Menu.
             exit.inputEnabled = true;
-            exit.events.onInputDown.add( function() { exitGame(); }, this );	
+            exit.events.onInputDown.add( function() { exitGame(); }, this );
+            
+            // Create a sprite on the right using the 'menu' image.
+            menu = game.add.sprite(540, 570, 'menu' );
+            // Anchor the sprite at its center, as opposed to its top-left corner.
+            // so it will be truly centered.
+            menu.anchor.setTo( 0.5, 0.5 );
+            
+            // When you click on the sprite, you go back to the Main Menu.
+            menu.inputEnabled = true;
+            menu.events.onInputDown.add( function() { mainMenu(); }, this );	
             
             // Add some text using a CSS style.
             scoresText = game.add.text(game.world.centerX, 10, '');

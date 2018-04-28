@@ -9,7 +9,7 @@ GameStates.makeEasy = function( game, shared ) {
 	var highScore;
     var menu, exit, start;
 	var background, music, bark, click;
-	var scoreText, timeText, text; 
+	var scoreText, timeText, text, endText; 
 	var score, time, counter, timer, countdown;
 	var randomDog;
 	var board, comp1, comp2, human1, human2, dog, pant;
@@ -186,6 +186,13 @@ GameStates.makeEasy = function( game, shared ) {
         //resetScores();
         score = 0;
 		music.stop();
+		
+		// turn off message text
+    	text.visible = false;
+		
+		// turn off end text
+    	endText.visible = false;
+    	
         //  Then let's go back to the main menu.
         game.state.start('MainMenu');
     }
@@ -245,40 +252,17 @@ GameStates.makeEasy = function( game, shared ) {
 		
 		bark.play();
 			
-        // remove old time text
-    	if (timeText != null)
-    		timeText.destroy();
-    	// Add time text using a CSS style.
-		timeText = game.add.text(game.world.centerX, 180, counter);
-		timeText.anchor.setTo( 0.5, 0.0 );
-		timeText.align = 'center';
+        // set time text
+    	timeText.text = counter;
 		
-		//  Font style
-		timeText.font = 'Arial Black';
-		timeText.fontSize = 30;
-		timeText.fontWeight = 'bold';
-		timeText.fill = '#E90524';
-	
-		// text shadow
-		timeText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		// turn off message text
+    	text.visible = false;
 		
-		// remove old message text
-    	if (text != null)
-    		text.destroy();
-    		
-    	// add new message text
-    	text = game.add.text(game.world.centerX, 50, '');
-		text.anchor.setTo( 0.5, 0.0 );
-		text.align = 'center';
-		
-		//  Font style
-		text.font = 'Arial Black';
-		text.fontSize = 40;
-		text.fontWeight = 'bold';
-		text.fill = '#f7fd29';
-		
-		// text shadow
-		text.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		// turn off end text
+    	endText.visible = false;
+    	
+    	// reinstate score text
+    	scoreText.visible = true;
 		
 		// remove old countdown timer
 		if (countdown != null)
@@ -313,6 +297,16 @@ GameStates.makeEasy = function( game, shared ) {
 		text.visible = true;
 		// music.stop();
 		
+		// turn off score text
+    	scoreText.visible = false;
+    	
+    	// turn on end text 
+    	if (score < highScore)
+				endText.text = 'Your Score: ' + score + '\n' + 'Top Score: ' + highScore;
+		else
+			endText.text = 'Your Score: ' + score + '\n' + 'Is New Top Score';
+    	endText.visible = true;
+    	
 		saveHighScore();
 	}
 	
@@ -327,6 +321,16 @@ GameStates.makeEasy = function( game, shared ) {
 		text.text = "YOU WON!";
 		text.visible = true;
 		// music.stop();
+		
+		// turn off score text
+    	scoreText.visible = false;
+    	
+    	// turn on end text 
+    	if (score < highScore)
+				endText.text = 'Your Score: ' + score + '\n' + 'Top Score: ' + highScore;
+		else
+			endText.text = 'Your Score: ' + score + '\n' + 'Is New Top Score';
+    	endText.visible = true;
 		
 		saveHighScore();
 	}
@@ -603,7 +607,7 @@ GameStates.makeEasy = function( game, shared ) {
             menu.inputEnabled = true;
             menu.events.onInputDown.add( function() { mainMenu(); }, this );	
             
-            // Add some text using a CSS style.
+            // Add score text using a CSS style.
             scoreText = game.add.text(game.world.centerX, 10, '');
             scoreText.anchor.setTo( 0.5, 0.0 );
             scoreText.align = 'center';
@@ -617,6 +621,54 @@ GameStates.makeEasy = function( game, shared ) {
 			// text shadow
 			scoreText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 			
+			// Add ending text using a CSS style.
+			endText = game.add.text(game.world.centerX, 60, '');
+			endText.anchor.setTo( 0.5, 0.0 );
+			endText.align = 'center';
+		
+			//  Font style
+			endText.font = 'Arial Black';
+			endText.fontSize = 25;
+			endText.fontWeight = 'bold';
+			endText.fill = '#030bfc';
+	
+			// text shadow
+			endText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+			
+			// make end text invisible
+			endText.visible = false;
+		
+			// add message text
+			text = game.add.text(game.world.centerX, 5, '');
+			text.anchor.setTo( 0.5, 0.0 );
+			text.align = 'center';
+	
+			//  Font style
+			text.font = 'Arial Black';
+			text.fontSize = 50;
+			text.fontWeight = 'bold';
+			text.fill = '#f7fd29';
+	
+			// text shadow
+			text.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+			
+			// turn off text
+			text.visible = false;
+			
+			// Add time text using a CSS style.
+			timeText = game.add.text(game.world.centerX, 180, '');
+			timeText.anchor.setTo( 0.5, 0.0 );
+			timeText.align = 'center';
+		
+			//  Font style
+			timeText.font = 'Arial Black';
+			timeText.fontSize = 30;
+			timeText.fontWeight = 'bold';
+			timeText.fill = '#E90524';
+	
+			// text shadow
+			timeText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+			
 			score = 0;
 			getHighScore();
         },
@@ -627,7 +679,7 @@ GameStates.makeEasy = function( game, shared ) {
         	}
         	
         	// update score text
-            scoreText.text = "Score: " + score;
+        	scoreText.text = "Score: " + score;
             
             // decrease time limit as score increases
             if (score >=50){

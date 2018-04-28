@@ -2,16 +2,18 @@
 
 GameStates.makeHard = function( game, shared ) {
     // Create your own variables.
+    var successMove = false;
+	var compSuccessMove = false;
+	var position = [];
+	var localStorageName = "scoreMem";
+	var highScore;
     var menu, exit, start;
 	var background, music, bark, click;
-	var scoresText, timeText, text; 
-	var scores, time, counter, timer, countdown, randomDog;
+	var scoreText, timeText, text, endText; 
+	var score, time, counter, timer, countdown;
+	var randomDog;
 	var board, comp1, comp2, human1, human2, dog, pant;
-	var position = [];
-	var compLost;
-	var successMove = false;
-	var compSuccessMove = false;
-	var firstMove;
+	var compLost, firstMove;
     
     // Handle clicking events on the cards ----------------------------------------------
     function listener (sprite) {
@@ -24,21 +26,21 @@ GameStates.makeHard = function( game, shared ) {
 				position[2] = 1;
 				position[0] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if ( (position[1]==0) && (!((dog.x==400)&&(dog.y==100))) ){
 				sprite.x = 580; 
 				sprite.y = 130;
 				position[1] = 1;
 				position[0] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if ( (position[3]==0) && (!((dog.x==200)&&(dog.y==280))) ){
 				sprite.x = 220; 
 				sprite.y = 460;
 				position[3] = 1;
 				position[0] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			}
 			firstMove = false;
 		}
@@ -51,21 +53,21 @@ GameStates.makeHard = function( game, shared ) {
 				position[2] = 1;
 				position[1] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if ( (position[0]==0) && (!((dog.x==400)&&(dog.y==100))) ){
 				sprite.x = 220; 
 				sprite.y = 130;
 				position[0] = 1;
 				position[1] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if ( (position[4]==0) && (!((dog.x==560)&&(dog.y==280))) ){
 				sprite.x = 580; 
 				sprite.y = 460;
 				position[4] = 1;
 				position[1] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			}
 			firstMove = false;
     	}
@@ -79,21 +81,21 @@ GameStates.makeHard = function( game, shared ) {
 					position[2] = 1;
 					position[3] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				} else if ( (position[0]==0) && (!((dog.x==200)&&(dog.y==280))) ){
 					sprite.x = 220; 
 					sprite.y = 130;
 					position[0] = 1;
 					position[3] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				} else if ( (position[4]==0) && (!((dog.x==400)&&(dog.y==440))) ){
 					sprite.x = 580; 
 					sprite.y = 460;
 					position[4] = 1;
 					position[3] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				}
 				firstMove = false;
 			}
@@ -108,21 +110,21 @@ GameStates.makeHard = function( game, shared ) {
 					position[2] = 1;
 					position[4] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				} else if ( (position[1]==0) && (!((dog.x==560)&&(dog.y==280))) ){
 					sprite.x = 580; 
 					sprite.y = 130;
 					position[1] = 1;
 					position[4] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				} else if ( (position[3]==0) && (!((dog.x==400)&&(dog.y==440))) ){
 					sprite.x = 220; 
 					sprite.y = 460;
 					position[3] = 1;
 					position[4] = 0;
 					successMove = true;
-					scores ++;
+					score ++;
 				}
 				firstMove = false;
 			} 
@@ -136,28 +138,28 @@ GameStates.makeHard = function( game, shared ) {
 				position[0] = 1;
 				position[2] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if (position[1]==0){
 				sprite.x = 580; 
 				sprite.y = 130;
 				position[1] = 1;
 				position[2] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if (position[3]==0){
 				sprite.x = 220; 
 				sprite.y = 460;
 				position[3] = 1;
 				position[2] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			} else if (position[4]==0){
 				sprite.x = 580; 
 				sprite.y = 460;
 				position[4] = 1;
 				position[2] = 0;
 				successMove = true;
-				scores ++;
+				score ++;
 			}
     	}
     	
@@ -182,15 +184,22 @@ GameStates.makeHard = function( game, shared ) {
         //  Here you should destroy anything you no longer need.
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
         //resetScores();
-        scores = 0;
+        score = 0;
 		music.stop();
+		
+		// turn off message text
+    	text.visible = false;
+		
+		// turn off end text
+    	endText.visible = false;
+    	
         //  Then let's go back to the main menu.
         game.state.start('MainMenu');
     }
     
     function startGame() {
-    	// set the scores and time
-    	scores = 0;
+    	// set the score and time
+    	score = 0;
         time = 8;
         counter = time;
         firstMove = true;
@@ -243,40 +252,17 @@ GameStates.makeHard = function( game, shared ) {
 		
 		bark.play();
 			
-        // remove old time text
-    	if (timeText != null)
-    		timeText.destroy();
-    	// Add time text using a CSS style.
-		timeText = game.add.text(game.world.centerX, 180, counter);
-		timeText.anchor.setTo( 0.5, 0.0 );
-		timeText.align = 'center';
+        // set time text
+    	timeText.text = counter;
 		
-		//  Font style
-		timeText.font = 'Arial Black';
-		timeText.fontSize = 30;
-		timeText.fontWeight = 'bold';
-		timeText.fill = '#E90524';
-	
-		// text shadow
-		timeText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		// turn off message text
+    	text.visible = false;
 		
-		// remove old message text
-    	if (text != null)
-    		text.destroy();
-    		
-    	// add new message text
-    	text = game.add.text(game.world.centerX, 50, '');
-		text.anchor.setTo( 0.5, 0.0 );
-		text.align = 'center';
-		
-		//  Font style
-		text.font = 'Arial Black';
-		text.fontSize = 40;
-		text.fontWeight = 'bold';
-		text.fill = '#f7fd29';
-		
-		// text shadow
-		text.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+		// turn off end text
+    	endText.visible = false;
+    	
+    	// reinstate score text
+    	scoreText.visible = true;
 		
 		// remove old countdown timer
 		if (countdown != null)
@@ -292,7 +278,7 @@ GameStates.makeHard = function( game, shared ) {
     }
     
     function exitGame() {
-    	scores = 0;
+    	score = 0;
     	//	Ok, the Exit Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
         music.stop();
         //	And exit game
@@ -310,6 +296,18 @@ GameStates.makeHard = function( game, shared ) {
 		text.text = "YOU LOST!";
 		text.visible = true;
 		// music.stop();
+		
+		// turn off score text
+    	scoreText.visible = false;
+    	
+    	// turn on end text 
+    	if (score < highScore)
+				endText.text = 'Your Score: ' + score + '\n' + 'Top Score: ' + highScore;
+		else
+			endText.text = 'Your Score: ' + score + '\n' + 'Is New Top Score';
+    	endText.visible = true;
+    	
+		saveHighScore();
 	}
 	
 	function playerWon(){
@@ -323,6 +321,18 @@ GameStates.makeHard = function( game, shared ) {
 		text.text = "YOU WON!";
 		text.visible = true;
 		// music.stop();
+		
+		// turn off score text
+    	scoreText.visible = false;
+    	
+    	// turn on end text 
+    	if (score < highScore)
+				endText.text = 'Your Score: ' + score + '\n' + 'Top Score: ' + highScore;
+		else
+			endText.text = 'Your Score: ' + score + '\n' + 'Is New Top Score';
+    	endText.visible = true;
+		
+		saveHighScore();
 	}
 	
 	function updateCounter() {
@@ -487,6 +497,24 @@ GameStates.makeHard = function( game, shared ) {
 			}
 		}
 	}
+	
+	function getHighScore(){
+		// retrieve high score from local storage
+			if(localStorage.getItem(localStorageName) == null) {
+				highScore = 0;
+			} else {
+				highScore = localStorage.getItem(localStorageName);
+			}
+	}
+	
+	function saveHighScore(){
+		// compare score to current high score
+		// if score is higher than current high score
+		// set it to high score and save to local storage
+		highScore = Math.max(score, highScore);
+		localStorage.setItem(localStorageName, highScore);
+	}
+	
     
     return {  // Begin game state functions ----------------------------------------------
     
@@ -579,48 +607,100 @@ GameStates.makeHard = function( game, shared ) {
             menu.inputEnabled = true;
             menu.events.onInputDown.add( function() { mainMenu(); }, this );	
             
-            // Add some text using a CSS style.
-            scoresText = game.add.text(game.world.centerX, 10, '');
-            scoresText.anchor.setTo( 0.5, 0.0 );
-            scoresText.align = 'center';
+            // Add score text using a CSS style.
+            scoreText = game.add.text(game.world.centerX, 10, '');
+            scoreText.anchor.setTo( 0.5, 0.0 );
+            scoreText.align = 'center';
             
             //  Font style
-			scoresText.font = 'Arial Black';
-			scoresText.fontSize = 40;
-			scoresText.fontWeight = 'bold';
-			scoresText.fill = '#030bfc';
+			scoreText.font = 'Arial Black';
+			scoreText.fontSize = 40;
+			scoreText.fontWeight = 'bold';
+			scoreText.fill = '#030bfc';
 		
 			// text shadow
-			scoresText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+			scoreText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
 			
-			scores = 0;
+			// Add ending text using a CSS style.
+			endText = game.add.text(game.world.centerX, 60, '');
+			endText.anchor.setTo( 0.5, 0.0 );
+			endText.align = 'center';
+		
+			//  Font style
+			endText.font = 'Arial Black';
+			endText.fontSize = 25;
+			endText.fontWeight = 'bold';
+			endText.fill = '#030bfc';
+	
+			// text shadow
+			endText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+			
+			// make end text invisible
+			endText.visible = false;
+		
+			// add message text
+			text = game.add.text(game.world.centerX, 5, '');
+			text.anchor.setTo( 0.5, 0.0 );
+			text.align = 'center';
+	
+			//  Font style
+			text.font = 'Arial Black';
+			text.fontSize = 50;
+			text.fontWeight = 'bold';
+			text.fill = '#f7fd29';
+	
+			// text shadow
+			text.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+			
+			// turn off text
+			text.visible = false;
+			
+			// Add time text using a CSS style.
+			timeText = game.add.text(game.world.centerX, 180, '');
+			timeText.anchor.setTo( 0.5, 0.0 );
+			timeText.align = 'center';
+		
+			//  Font style
+			timeText.font = 'Arial Black';
+			timeText.fontSize = 30;
+			timeText.fontWeight = 'bold';
+			timeText.fill = '#E90524';
+	
+			// text shadow
+			timeText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);
+			
+			score = 0;
+			getHighScore();
         },
     
         update: function () {
         	if (compLost){
         		playerWon();
         	}
-            scoresText.text = "Scores: " + scores;
+        	
+        	// update score text
+        	scoreText.text = "Score: " + score;
             
-            if (scores >=100){
+            // decrease time limit as score increases
+            if (score >=50){
             	time = 1;
             }
-            else if (scores >=70){
+            else if (score >=34){
             	time = 2;
             }
-			else if (scores >=50){
+			else if (score >=26){
 				time = 3;
             }
-			else if (scores >=40){
+			else if (score >=22){
 				time = 4;
             }
-			else if (scores >=30){
+			else if (score >=18){
 				time = 5;
             }
-			else if (scores >=20){
+			else if (score >=14){
 				time = 6;
             }
-			else if (scores >=10){
+			else if (score >=8){
 				time = 7;
             }
         }

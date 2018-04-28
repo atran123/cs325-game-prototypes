@@ -31,7 +31,8 @@ GameStates.makePreloader = function( game ) {
             game.load.spritesheet('dog', 'assets/dog.png', 102, 81.5, 4);
             game.load.image('logo', 'assets/phaser.png');
 			game.load.image('bg', 'assets/light1.jpg');
-			game.load.image('play', 'assets/play.png');
+			game.load.image('easy', 'assets/easy.png');
+			game.load.image('hard', 'assets/hard.png');
 			game.load.image('start', 'assets/start.png');
 			game.load.image('menu', 'assets/menu.png');
 			game.load.image('exit', 'assets/exit.png');

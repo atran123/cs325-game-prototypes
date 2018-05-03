@@ -5,7 +5,7 @@ GameStates.makeEasy = function( game, shared ) {
     var successMove = false;
 	var compSuccessMove = false;
 	var position = [];
-	var localStorageName = "scoreMem";
+	var localStorageName = "scoreMemEasy";
 	var highScore;
     var menu, exit, start;
 	var background, music, bark, click;

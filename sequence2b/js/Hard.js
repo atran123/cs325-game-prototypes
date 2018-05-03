@@ -5,7 +5,7 @@ GameStates.makeHard = function( game, shared ) {
     var successMove = false;
 	var compSuccessMove = false;
 	var position = [];
-	var localStorageName = "scoreMem";
+	var localStorageName = "scoreMemHard";
 	var highScore;
     var menu, exit, start;
 	var background, music, bark, click;

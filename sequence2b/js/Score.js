@@ -2,19 +2,25 @@
 
 GameStates.makeScore = function( game, shared ) {
 	var bouncy;
-	var highScore;
-	var bestScore;
-	var localStorageName = "scoreMem";
-	var highScoreText;
+	var highScoreEasy;
+	var bestScoreEasy;
+	var highScoreHard;
+	var bestScoreHard;
+	var localStorageNameEasy = "scoreMemEasy";
+	var localStorageNameHard = "scoreMemHard";
+	var highScoreEasyText;
+	var highScoreHardText;
 	var menu, exit;
 	
-	function getHighScore(){
+	function getHighScore(localStorageName){
+		var highScore;
 		// retrieve high score from local storage
 		if(localStorage.getItem(localStorageName) == null) {
 			highScore = 0;
 		} else {
 			highScore = localStorage.getItem(localStorageName);
 		}
+		return highScore;
 	}
 	
 	function mainMenu() {
@@ -66,23 +72,40 @@ GameStates.makeScore = function( game, shared ) {
             // When you click on the sprite, you go back to the Main Menu.
             exit.inputEnabled = true;
             exit.events.onInputDown.add( function() { exitGame(); }, this );
-			
-			// Add some text using a CSS style.
+            
+            // Add High Score text for Easy Mode using a CSS style
 			// Center it in X, and position its top 15 pixels from the top of the world.
-			getHighScore();
-			bestScore = 'Best score: ' + highScore;
+			highScoreEasy = getHighScore(localStorageNameEasy);
+			bestScoreEasy = 'Easy Mode \n' + 'Best score: ' + highScoreEasy;
 			
-			highScoreText = game.add.text( game.world.centerX, 15, bestScore);
-			highScoreText.align = 'center';
+			highScoreEasyText = game.add.text( game.world.centerX-200, 15, bestScoreEasy);
+			highScoreEasyText.align = 'center';
 			
 			//  Font style
-			highScoreText.font = 'Verdana';
-			highScoreText.fontSize = 50;
-			highScoreText.fontWeight = 'bold';
-			highScoreText.fill = '#6ff3fe';
+			highScoreEasyText.font = 'Verdana';
+			highScoreEasyText.fontSize = 40;
+			highScoreEasyText.fontWeight = 'bold';
+			highScoreEasyText.fill = '#6ff3fe';
 			
-			highScoreText.setShadow(3, 3, 'rgba(255,255,255,0.9)', 10);
-			highScoreText.anchor.setTo( 0.5, 0.0 );
+			highScoreEasyText.setShadow(3, 3, 'rgba(255,255,255,0.9)', 10);
+			highScoreEasyText.anchor.setTo( 0.5, 0.0 );
+			
+			// Add High Score text for Hard Mode using a CSS style
+			// Center it in X, and position its top 15 pixels from the top of the world.
+			highScoreHard = getHighScore(localStorageNameHard);
+			bestScoreHard = 'Hard Mode \n' + 'Best score: ' + highScoreHard;
+			
+			highScoreHardText = game.add.text( game.world.centerX+200, 15, bestScoreHard);
+			highScoreHardText.align = 'center';
+			
+			//  Font style
+			highScoreHardText.font = 'Verdana';
+			highScoreHardText.fontSize = 40;
+			highScoreHardText.fontWeight = 'bold';
+			highScoreHardText.fill = '#E6E6FA';
+			
+			highScoreHardText.setShadow(3, 3, 'rgba(255,255,255,0.9)', 10);
+			highScoreHardText.anchor.setTo( 0.5, 0.0 );
 		},
 	
 		update: function () {

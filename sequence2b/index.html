@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Digital 8</title>
+    <script src="js/phaser.min.js"></script>
+	<!-- Boot.js must come first since it creates the BasicGame object
+	that stores all the states. -->
+	<script src="js/Boot.js"></script>
+	<script src="js/Preloader.js"></script>
+	<script src="js/MainMenu.js"></script>
+	<script src="js/Easy.js"></script>
+	<script src="js/Hard.js"></script>
+	<script src="js/Exit.js"></script>
+	<script src="js/Score.js"></script>
+	<!-- main.js must come last since it references the other ones. -->
+	<script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Dodge the Dog</h2>
+<ul>
+
+<li><strong>High Concept:</strong>
+2-player chess type game.
+</li>
+
+<li><strong>Theme:</strong>
+Chess.
+</li>
+
+<li><strong>Mandated Variety:</strong>
+Input: Mouse. Play style: Single player vs. Computer.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+Have fun. The goal of the game is to corner your opponent.  A player wins if the opponent is out of moves (cannot get to the open position without crossing the dog).
+</li>
+
+<li><strong>Gameplay:</strong>
+Each side will have 2 pieces, on a simple board. There is exactly 1 open position at any given time. Computer's pieces are purple and on top of board, player's are green and at bottom.  Player goes first.  Only 1 piece can be moved per turn. 
+<br>- If the dog is on the right side of the board, player's will not be able to move the right piece on the 1st move, since that would instantly make computer out of moves.  Similarly, if the dog is on the left side of the board, player's won't be able to move the left piece on the 1st move. 
+<br>- Chess pieces can be moved horizontally, vertically, or diagonally to the open position.
+Player starts with a time limit of 8 seconds to move.  Each successful move earns a point.  As the score goes up, the time limit will gradually goes down to 1 second. 
+<br>- The player loses when he/she is out of moves, or time is up before he/she can make a move.
+<br>- In the easy mode, the dog will remain in its initial position throughout the game. The computer will randomly pick 1 of the 2 pieces to move to the open position, it does not calculate the best move. The move may lead the computer to a loss.
+<br>- In the hard mode, the dog will randomly move to different positions throughout the game. A dog's move will not put the player in an "out of moves" situation.  The computer will also calculate which piece is best to move.  This mode is not implemented yet.  The easy mode is used in its place.
+
+</li>
+
+<li><strong>Target Audience:</strong>
+All.
+</li>
+
+<li><strong>Play Time:</strong>
+3-5 minute.
+</li>
+
+<li><strong>Strategies:</strong>
+Try to press both pieces of your opponent into 1 side of the board, and try to avoid being pressed to 1 side.  Fast reaction is needed as the game advances, since the time limit will eventually reaches 1 second.
+</li>
+<li><strong>Originality:</strong>
+The game strategy. Can move a piece by just clicking on it, no need to slide it. Decreasing time with increasing score. Click on the dog to hear it barks.
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+What did you learn from this prototype: developing the game with states, chess algorithm.
+What was the easiest or hardest part of making it. Hard part: graphics and computer algorithm.
+</li>
+
+<li><strong>Prototype Assets:</strong>
+Borrowed from the internet and the template. Sources: google.  Code for 'Exit' state copied from the template.  
+<ul>
+	<li>Buttons: created with online tools from <a href="http://buttonoptimizer.com/#">Free Button Creator</a></li>
+	<li>Game Music: <a href="http://www.soundclick.com/bands/page_songInfo.cfm?bandID=1053765&songID=10404201">Casino</a></li>
+	<li>Menu Music: <a href="http://soundimage.org/wp-content/uploads/2014/04/Game-Menu.mp3">Menu</a></li>
+	<li>Dog's bark: <a href="http://soundbible.com/grab.php?id=70&type=mp3">Woof</a></li>
+	<li>Sprite Sheet: <a href="http://24.media.tumblr.com/tumblr_md1a8v4nzF1qgd7tso1_500.gif">Dog</a></li>
+	<li>Game Background: <a href="https://wallpaperscraft.com/image/surface_network_light_background_texture_50497_1920x1200.jpg">Background</a></li>
+	<li>Menu Background: <a href="https://img00.deviantart.net/350c/i/2009/095/a/8/bolt_wallpaper_by_stickman_art.jpg">Bolt the Dog</a></li>
+	<li>Board: <a href="https://vt-s3-files.s3.amazonaws.com/uploads/problem_question_image/image/13797/1.png">Diagonal Line</a></li>
+	<li>Purple chess piece: <a href="http://clipground.com/images/color-circle-clipart-13.jpg">Purple Circle</a></li>
+	<li>Green chess piece: <a href="http://weclipart.com/gimg/43DA6DA544BFE302/colored-circle-14249-large.png">Green Circle</a></li>
+	<li>Boot Background: <a href="https://i.pinimg.com/originals/ab/b7/ee/abb7ee827dbbe98178de8b3edf9b9c53.jpg">Ocean</a></li>
+</ul>
+</li>
+<li><strong>Prototype Closest Other Game:</strong>
+Which other game most closely resembles your game? None.</li>
+
+<ul>
+</ul>
+</li>
+</ul>
+</div>
+</body>
+</html>

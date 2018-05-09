@@ -2171,7 +2171,7 @@ GameStates.makeImpossible = function( game, shared ) {
 			endText.font = 'Arial Black';
 			endText.fontSize = 25;
 			endText.fontWeight = 'bold';
-			endText.fill = '#030bfc';
+			endText.fill = '#ff1bff';
 	
 			// text shadow
 			endText.setShadow(5, 5, 'rgba(0,0,0,0.5)', 5);

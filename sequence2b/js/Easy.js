@@ -6,14 +6,16 @@ GameStates.makeEasy = function( game, shared ) {
 	var compSuccessMove = false;
 	var position = [];
 	var localStorageName = "scoreMemEasy";
+	var localStorageNameOutcome = "outcomeMemEasy";
 	var highScore;
     var menu, exit, start;
 	var background, music, bark, click;
 	var scoreText, timeText, text, endText; 
 	var score, time, counter, timer, countdown;
-	var randomDog;
+	var randomDogPos;
 	var board, comp1, comp2, human1, human2, dog, pant;
 	var compLost, firstMove;
+	var outcome;
     
     // Handle clicking events on the cards ----------------------------------------------
     function listener (sprite) {
@@ -164,10 +166,12 @@ GameStates.makeEasy = function( game, shared ) {
     	}
     	
     	if (successMove){
-			// computer's turn to go
 			click.play();
+			
+			// computer's turn to go
 			compTurn();
 		
+			// reset timer
 			game.time.events.remove(countdown);
 			counter = time;
 			timeText.setText(counter);
@@ -231,24 +235,8 @@ GameStates.makeEasy = function( game, shared ) {
         	
         // move the dog: (560, 280) right side, (400, 440) bottom
 		// (200, 280) left side, (400, 100) top
-		randomDog = Math.floor(Math.random()*4);
-		
-		if (randomDog == 0){
-			dog.x = 560;
-			dog.y = 280;
-		}
-		else if (randomDog == 1){
-			dog.x = 400;
-			dog.y = 440;
-		}
-		else if (randomDog == 2){
-			dog.x = 200;
-			dog.y = 280;
-		}
-		else {
-			dog.x = 400;
-			dog.y = 100;
-		}
+		randomDogPos = Math.floor(Math.random()*4);
+		moveDog(randomDogPos);
 		
 		bark.play();
 			
@@ -307,6 +295,8 @@ GameStates.makeEasy = function( game, shared ) {
 			endText.text = 'Your Score: ' + score + '\n' + 'Is New Top Score';
     	endText.visible = true;
     	
+    	outcome = 'Loss';
+    	
 		saveHighScore();
 	}
 	
@@ -331,6 +321,8 @@ GameStates.makeEasy = function( game, shared ) {
 		else
 			endText.text = 'Your Score: ' + score + '\n' + 'Is New Top Score';
     	endText.visible = true;
+		
+		outcome = 'Win';
 		
 		saveHighScore();
 	}
@@ -463,6 +455,26 @@ GameStates.makeEasy = function( game, shared ) {
     	} 
 	}
 	
+	// move dog according to input position
+	function moveDog(pos){
+		if (pos == 0){	// right
+			dog.x = 560;
+			dog.y = 280;
+		}
+		else if (pos == 1){	// top
+			dog.x = 400;
+			dog.y = 100;
+		}
+		else if (pos == 2){	// left
+			dog.x = 200;
+			dog.y = 280;
+		}
+		else {				// bottom
+			dog.x = 400;
+			dog.y = 440;
+		}
+	}
+	
 	// this is a  simple computer algorithm of the chess game
 	// computer will randomly pick 1 of the 2 pieces and move to the open position
 	// it does not calculate the best move. The move may lead computer to a loss.
@@ -513,6 +525,7 @@ GameStates.makeEasy = function( game, shared ) {
 		// set it to high score and save to local storage
 		highScore = Math.max(score, highScore);
 		localStorage.setItem(localStorageName, highScore);
+		localStorage.setItem(localStorageNameOutcome, outcome);
 	}
 	
     
@@ -522,10 +535,8 @@ GameStates.makeEasy = function( game, shared ) {
     
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
             
-            randomDog = Math.floor(Math.random()*4);
-            
             // Add music
-			music = game.add.audio('gameMusic');
+			music = game.add.audio('easyMusic');
 			music.loop = true;
 			music.play();
 			
@@ -533,7 +544,7 @@ GameStates.makeEasy = function( game, shared ) {
 			click = game.add.audio('click');
             
             //  A simple background for our game
-			background = game.add.sprite( 0, 0, 'bg' );
+			background = game.add.sprite( 0, 0, 'easyBG' );
 			
 			// create the board
 			board = game.add.sprite(400, 300, 'board');
@@ -682,10 +693,7 @@ GameStates.makeEasy = function( game, shared ) {
         	scoreText.text = "Score: " + score;
             
             // decrease time limit as score increases
-            if (score >=50){
-            	time = 1;
-            }
-            else if (score >=34){
+            if (score >=34){
             	time = 2;
             }
 			else if (score >=26){

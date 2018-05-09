@@ -30,9 +30,14 @@ GameStates.makePreloader = function( game ) {
             game.load.spritesheet('cards', 'assets/cards.gif', 81, 81);
             game.load.spritesheet('dog', 'assets/dog.png', 102, 81.5, 4);
             game.load.image('logo', 'assets/phaser.png');
-			game.load.image('bg', 'assets/light1.jpg');
+			
+			game.load.image('easyBG', 'assets/easyBG.jpg');
+			game.load.image('hardBG', 'assets/hardBG.jpg');
+			game.load.image('impossibleBG', 'assets/impossibleBG.jpg');
+			
 			game.load.image('easy', 'assets/easy.png');
 			game.load.image('hard', 'assets/hard.png');
+			game.load.image('impossible', 'assets/impossible.png');
 			game.load.image('start', 'assets/start.png');
 			game.load.image('menu', 'assets/menu.png');
 			game.load.image('menu_score', 'assets/menu_score.png');
@@ -42,7 +47,9 @@ GameStates.makePreloader = function( game ) {
 			game.load.image('board', 'assets/board.png');
 			game.load.image('comp', 'assets/comp.png');
 			game.load.image('human', 'assets/human.png');
-			game.load.audio('gameMusic', ['assets/casino.mp3']);
+			game.load.audio('easyMusic', ['assets/easy.mp3']);
+			game.load.audio('hardMusic', ['assets/hard.mp3']);
+			game.load.audio('impossibleMusic', ['assets/impossible.mp3']);
 			game.load.audio('bark', ['assets/bark.mp3']);
 			game.load.audio('click', ['assets/push.mp3']);
         },

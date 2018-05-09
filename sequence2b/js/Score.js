@@ -6,11 +6,21 @@ GameStates.makeScore = function( game, shared ) {
 	var bestScoreEasy;
 	var highScoreHard;
 	var bestScoreHard;
+	var highScoreImpos;
+	var bestScoreImpos;
 	var localStorageNameEasy = "scoreMemEasy";
 	var localStorageNameHard = "scoreMemHard";
+	var localStorageNameImpos = "scoreMemImpos";
 	var highScoreEasyText;
 	var highScoreHardText;
+	var highScoreImposText;
 	var menu, exit;
+	var localStorageNameOutcomeEasy = "outcomeMemEasy";
+	var localStorageNameOutcomeHard = "outcomeMemHard";
+	var localStorageNameOutcomeImpos = "outcomeMemImpos";
+	var outcomeEasy;
+	var outcomeHard;
+	var outcomeImpos;
 	
 	function getHighScore(localStorageName){
 		var highScore;
@@ -21,6 +31,17 @@ GameStates.makeScore = function( game, shared ) {
 			highScore = localStorage.getItem(localStorageName);
 		}
 		return highScore;
+	}
+	
+	function getOutcome(localStorageName){
+		var outcome;
+		// retrieve high score from local storage
+		if(localStorage.getItem(localStorageName) == null) {
+			outcome = '';
+		} else {
+			outcome = localStorage.getItem(localStorageName);
+		}
+		return outcome;
 	}
 	
 	function mainMenu() {
@@ -76,16 +97,17 @@ GameStates.makeScore = function( game, shared ) {
             // Add High Score text for Easy Mode using a CSS style
 			// Center it in X, and position its top 15 pixels from the top of the world.
 			highScoreEasy = getHighScore(localStorageNameEasy);
-			bestScoreEasy = 'Easy Mode \n' + 'Best score: ' + highScoreEasy;
+			outcomeEasy = getOutcome(localStorageNameOutcomeEasy);
+			bestScoreEasy = 'Easy Mode \n' + 'Best score: ' + highScoreEasy + '\n' + outcomeEasy;
 			
-			highScoreEasyText = game.add.text( game.world.centerX-200, 15, bestScoreEasy);
+			highScoreEasyText = game.add.text( game.world.centerX-240, 15, bestScoreEasy);
 			highScoreEasyText.align = 'center';
 			
 			//  Font style
 			highScoreEasyText.font = 'Verdana';
-			highScoreEasyText.fontSize = 40;
+			highScoreEasyText.fontSize = 26;
 			highScoreEasyText.fontWeight = 'bold';
-			highScoreEasyText.fill = '#6ff3fe';
+			highScoreEasyText.fill = '#51fe7c';
 			
 			highScoreEasyText.setShadow(3, 3, 'rgba(255,255,255,0.9)', 10);
 			highScoreEasyText.anchor.setTo( 0.5, 0.0 );
@@ -93,19 +115,38 @@ GameStates.makeScore = function( game, shared ) {
 			// Add High Score text for Hard Mode using a CSS style
 			// Center it in X, and position its top 15 pixels from the top of the world.
 			highScoreHard = getHighScore(localStorageNameHard);
-			bestScoreHard = 'Hard Mode \n' + 'Best score: ' + highScoreHard;
+			outcomeHard = getOutcome(localStorageNameOutcomeHard);
+			bestScoreHard = 'Hard Mode \n' + 'Best score: ' + highScoreHard + '\n' + outcomeHard;
 			
-			highScoreHardText = game.add.text( game.world.centerX+200, 15, bestScoreHard);
+			highScoreHardText = game.add.text( game.world.centerX, 15, bestScoreHard);
 			highScoreHardText.align = 'center';
 			
 			//  Font style
 			highScoreHardText.font = 'Verdana';
-			highScoreHardText.fontSize = 40;
+			highScoreHardText.fontSize = 26;
 			highScoreHardText.fontWeight = 'bold';
-			highScoreHardText.fill = '#E6E6FA';
+			highScoreHardText.fill = '#18ffff';
 			
 			highScoreHardText.setShadow(3, 3, 'rgba(255,255,255,0.9)', 10);
 			highScoreHardText.anchor.setTo( 0.5, 0.0 );
+			
+			// Add High Score text for Impossible Mode using a CSS style
+			// Center it in X, and position its top 15 pixels from the top of the world.
+			highScoreImpos = getHighScore(localStorageNameImpos);
+			outcomeImpos = getOutcome(localStorageNameOutcomeImpos);
+			bestScoreImpos = 'Impossible \n' + 'Best score: ' + highScoreImpos + '\n' + outcomeImpos;
+			
+			highScoreImposText = game.add.text( game.world.centerX+240, 15, bestScoreImpos);
+			highScoreImposText.align = 'center';
+			
+			//  Font style
+			highScoreImposText.font = 'Verdana';
+			highScoreImposText.fontSize = 26;
+			highScoreImposText.fontWeight = 'bold';
+			highScoreImposText.fill = '#bbc5ff';
+			
+			highScoreImposText.setShadow(3, 3, 'rgba(255,255,255,0.9)', 10);
+			highScoreImposText.anchor.setTo( 0.5, 0.0 );
 		},
 	
 		update: function () {

@@ -5,6 +5,7 @@ GameStates.makeMainMenu = function( game, shared ) {
 	var music = null;
 	var playEasy = null;
 	var playHard = null;
+	var playImpossible = null;
 	var Exit = null;
 	var Score = null;
 	var text = null;
@@ -23,6 +24,14 @@ GameStates.makeMainMenu = function( game, shared ) {
 
         //	And start the actual game
         game.state.start('Hard');
+    }
+    
+    function startImpossible(pointer) {
+        //	Ok, the Play Button has been clicked or touched, so let's stop the music (otherwise it'll carry on playing)
+        music.stop();
+
+        //	And start the actual game
+        game.state.start('Impossible');
     }
     
     function startExit(pointer) {
@@ -57,7 +66,7 @@ GameStates.makeMainMenu = function( game, shared ) {
         	
         	// Add some text using a CSS style.
 			// Center it in X, and position its top 50 pixels from the top of the world.
-        	text = game.add.text(game.world.centerX-150, 50, 'Dodge the Dog');
+        	text = game.add.text(game.world.centerX-150, 30, 'Dodge the Dog');
         	text.anchor.setTo( 0.5, 0.0 );
         	text.align = 'center';
         	
@@ -70,10 +79,11 @@ GameStates.makeMainMenu = function( game, shared ) {
 			// text shadow
 			text.setShadow(5, 5, 'rgba(255,0,0,0.5)', 0);
             
-            playEasy = game.add.button(130, 170, 'easy', startEasy, null);
-            playHard = game.add.button(130, 265, 'hard', startHard, null);
-            Score = game.add.button(190, 360, 'score', startScore, null);
-            Exit = game.add.button(320, 450, 'exit_main', startExit, null);
+            playEasy = game.add.button(130, 130, 'easy', startEasy, null);
+            playHard = game.add.button(130, 215, 'hard', startHard, null);
+            playImpossible = game.add.button(190, 300, 'impossible', startImpossible, null);
+            Score = game.add.button(220, 385, 'score', startScore, null);
+            Exit = game.add.button(320, 470, 'exit_main', startExit, null);
         },
     
         update: function () {

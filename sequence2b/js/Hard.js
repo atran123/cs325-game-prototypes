@@ -6,14 +6,16 @@ GameStates.makeHard = function( game, shared ) {
 	var compSuccessMove = false;
 	var position = [];
 	var localStorageName = "scoreMemHard";
+	var localStorageNameOutcome = "outcomeMemHard";
 	var highScore;
     var menu, exit, start;
 	var background, music, bark, click;
 	var scoreText, timeText, text, endText; 
 	var score, time, counter, timer, countdown;
-	var randomDog;
+	var randomDogMove, randomDogPos;
 	var board, comp1, comp2, human1, human2, dog, pant;
 	var compLost, firstMove;
+	var outcome;
     
     // Handle clicking events on the cards ----------------------------------------------
     function listener (sprite) {
@@ -164,10 +166,13 @@ GameStates.makeHard = function( game, shared ) {
     	}
     	
     	if (successMove){
-			// computer's turn to go
 			click.play();
+			randomlyMoveDog();
+
+			// computer's turn to go
 			compTurn();
 		
+			// reset timer
 			game.time.events.remove(countdown);
 			counter = time;
 			timeText.setText(counter);
@@ -231,24 +236,8 @@ GameStates.makeHard = function( game, shared ) {
         	
         // move the dog: (560, 280) right side, (400, 440) bottom
 		// (200, 280) left side, (400, 100) top
-		randomDog = Math.floor(Math.random()*4);
-		
-		if (randomDog == 0){
-			dog.x = 560;
-			dog.y = 280;
-		}
-		else if (randomDog == 1){
-			dog.x = 400;
-			dog.y = 440;
-		}
-		else if (randomDog == 2){
-			dog.x = 200;
-			dog.y = 280;
-		}
-		else {
-			dog.x = 400;
-			dog.y = 100;
-		}
+		randomDogPos = Math.floor(Math.random()*4);
+		moveDog(randomDogPos);
 		
 		bark.play();
 			
@@ -307,6 +296,8 @@ GameStates.makeHard = function( game, shared ) {
 			endText.text = 'Your Score: ' + score + '\n' + 'Is New Top Score';
     	endText.visible = true;
     	
+    	outcome = 'Loss';
+    	
 		saveHighScore();
 	}
 	
@@ -331,6 +322,8 @@ GameStates.makeHard = function( game, shared ) {
 		else
 			endText.text = 'Your Score: ' + score + '\n' + 'Is New Top Score';
     	endText.visible = true;
+		
+		outcome = 'Win';
 		
 		saveHighScore();
 	}
@@ -463,6 +456,462 @@ GameStates.makeHard = function( game, shared ) {
     	} 
 	}
 	
+	// move dog according to input position
+	function moveDog(pos){
+		if (pos == 0){	// right
+			dog.x = 560;
+			dog.y = 280;
+		}
+		else if (pos == 1){	// top
+			dog.x = 400;
+			dog.y = 100;
+		}
+		else if (pos == 2){	// left
+			dog.x = 200;
+			dog.y = 280;
+		}
+		else {				// bottom
+			dog.x = 400;
+			dog.y = 440;
+		}
+	}
+	
+	// randomly move the dog
+	function randomlyMoveDog(){
+		randomDogMove = Math.floor(Math.random()*2);
+		if (randomDogMove == 1){	// move when random = 1; no move when random = 0
+			randomDogPos = Math.floor(Math.random()*4);
+			
+			// DOG AT RIGHT
+			if ( (dog.x == 560) && (dog.y == 280) ){
+			
+				// if not human at 2,3, and comp at 0,1
+				if ((!( ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 460)) 
+					  || ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 460)) )
+					&& ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+						|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 130)) ) ))
+
+					&& // not human at 2,0, and comp at 3,4
+					(!( ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 130)) 
+					  || ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 130)) )
+					&& ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+						|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ) )) ){
+		
+					// 1.human at 2 and 4
+					if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 460)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 460)) ){
+					
+						// comp at 0 and 1
+						if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 130)) ){
+							while (randomDogPos == 2)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+						// comp at 0 and 3
+						else if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 220) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 220) && (comp1.y == 460)) ){
+							while (randomDogPos == 1)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					} 
+				
+					// 2.human at 2 and 3
+					else if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 460)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 460)) ){
+					
+						// comp at 1 and 4
+						if ( ((comp1.x == 580) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 580) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 1)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+					}
+				
+					// 3.human at 3 and 4
+					else if ( ((human1.x == 220) && (human1.y == 460) && (human2.x == 580) && (human2.y == 460)) 
+						|| ((human2.x == 220) && (human2.y == 460) && (human1.x == 580) && (human1.y == 460)) ){
+
+						//comp at 0 and 1						
+						if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 130)) ){
+							while (randomDogPos == 2)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+
+					// 4.human at 2 and 1
+					if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 130)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 130)) ){
+					
+						// comp at 3 and 4
+						if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 2)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+						// comp at 0 and 3
+						else if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 220) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 220) && (comp1.y == 460)) ){
+							while (randomDogPos == 3)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+
+					// 5.human at 2 and 0
+					else if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 130)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 130)) ){
+					
+						// comp at 1 and 4
+						if ( ((comp1.x == 580) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 580) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 3)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+					}
+
+					// 6.human at 0 and 1
+					else if ( ((human1.x == 220) && (human1.y == 130) && (human2.x == 580) && (human2.y == 130)) 
+						|| ((human2.x == 220) && (human2.y == 130) && (human1.x == 580) && (human1.y == 130)) ){
+
+						//comp at 3 and 4						
+						if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 2)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+				
+					moveDog(randomDogPos);
+				} // if not human at 2,3, and comp at 0,1; AND not human at 2,0, and comp at 3,4
+			} // DOG AT RIGHT
+
+			// DOG AT LEFT
+			else if ( (dog.x == 200) && (dog.y == 280) ){
+			
+				// if NOT human at 2,4, and comp at 0,1
+				if ((!( ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 460)) 
+					  || ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 460)) )
+					&& ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+						|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 130)) ) ))
+
+					&& // not human at 2,1, and comp at 3,4
+					(!( ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 130)) 
+					  || ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 130)) )
+					&& ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+						|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ) )) ){
+		
+					// 1.human at 2 and 3
+					if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 460)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 460)) ){
+					
+						// comp at 0 and 1
+						if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 130)) ){
+							while (randomDogPos == 0)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+						// comp at 1 and 4
+						else if ( ((comp1.x == 580) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 580) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 1)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					} 
+				
+					// 2.human at 2 and 4
+					else if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 460)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 460)) ){
+					
+						// comp at 0 and 3
+						if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 220) && (comp1.y == 460)) ){
+							while (randomDogPos == 1)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+					}
+				
+					// 3.human at 3 and 4
+					else if ( ((human1.x == 220) && (human1.y == 460) && (human2.x == 580) && (human2.y == 460)) 
+						|| ((human2.x == 220) && (human2.y == 460) && (human1.x == 580) && (human1.y == 460)) ){
+
+						//comp at 0 and 1						
+						if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 130)) ){
+							while (randomDogPos == 0)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+
+					// 4.human at 2 and 0
+					if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 130)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 130)) ){
+					
+						// comp at 3 and 4
+						if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 0)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+						// comp at 1 and 4
+						else if ( ((comp1.x == 580) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 580) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 3)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+
+					// 5.human at 2 and 1
+					else if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 130)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 130)) ){
+					
+						// comp at 0 and 3
+						if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 220) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 220) && (comp1.y == 460)) ){
+							while (randomDogPos == 3)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+					}
+
+					// 6.human at 0 and 1
+					else if ( ((human1.x == 220) && (human1.y == 130) && (human2.x == 580) && (human2.y == 130)) 
+						|| ((human2.x == 220) && (human2.y == 130) && (human1.x == 580) && (human1.y == 130)) ){
+
+						//comp at 3 and 4						
+						if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 0)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+				
+					moveDog(randomDogPos);
+				} // if NOT human at 2,4, and comp at 0,1; AND not human at 2,1, and comp at 3,4
+			} // DOG AT LEFT
+
+			// DOG AT TOP
+			else if ( (dog.x == 400) && (dog.y == 100) ){
+			
+				// if NOT human at 2,3, and comp at 4,1
+				if ((!( ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 460)) 
+					  || ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 460)) )
+					&& ( ((comp1.x == 580) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 130))
+						|| ((comp2.x == 580) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 130)) ) ))
+
+					&& // not human at 2,4, and comp at 3,0
+					(!( ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 460)) 
+					  || ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 460)) )
+					&& ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 220) && (comp2.y == 130))
+						|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 220) && (comp1.y == 130)) ) )) ){
+		
+					// 1.human at 2 and 0
+					if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 460)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 460)) ){
+					
+						// comp at 1 and 4
+						if ( ((comp1.x == 580) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 580) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 3)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+						// comp at 3 and 4
+						else if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 0)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					} 
+				
+					// 2.human at 2 and 3
+					else if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 460)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 460)) ){
+					
+						// comp at 0 and 1
+						if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 130)) ){
+							while (randomDogPos == 0)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+					}
+				
+					// 3.human at 3 and 0
+					else if ( ((human1.x == 220) && (human1.y == 460) && (human2.x == 220) && (human2.y == 130)) 
+						|| ((human2.x == 220) && (human2.y == 460) && (human1.x == 220) && (human1.y == 130)) ){
+
+						//comp at 4 and 1						
+						if ( ((comp1.x == 580) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 580) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 130)) ){
+							while (randomDogPos == 3)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+
+					// 4.human at 2 and 1
+					if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 130)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 130)) ){
+					
+						// comp at 3 and 0
+						if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 220) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 220) && (comp1.y == 130)) ){
+							while (randomDogPos == 3)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+						// comp at 3 and 4
+						else if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 2)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+
+					// 5.human at 2 and 4
+					else if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 460)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 460)) ){
+					
+						// comp at 0 and 1
+						if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 130)) ){
+							while (randomDogPos == 2)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+					}
+
+					// 6.human at 4 and 1
+					else if ( ((human1.x == 580) && (human1.y == 460) && (human2.x == 580) && (human2.y == 130)) 
+						|| ((human2.x == 580) && (human2.y == 460) && (human1.x == 580) && (human1.y == 130)) ){
+
+						//comp at 3 and 0						
+						if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 220) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 220) && (comp1.y == 130)) ){
+							while (randomDogPos == 3)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+				
+					moveDog(randomDogPos);
+				} // if NOT human at 2,3, and comp at 4,1; AND not human at 2,4, and comp at 3,0
+			} // DOG AT TOP
+
+			// DOG AT BOTTOM
+			else if ( (dog.x == 400) && (dog.y == 440) ){
+			
+				// if NOT human at 2,1, and comp at 0,3
+				if ((!( ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 130)) 
+					  || ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 130)) )
+					&& ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 220) && (comp2.y == 460))
+						|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 220) && (comp1.y == 460)) ) ))
+
+					&& // not human at 2,0, and comp at 1,4
+					(!( ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 130)) 
+					  || ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 130)) )
+					&& ( ((comp1.x == 580) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 460))
+						|| ((comp2.x == 580) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 460)) ) )) ){
+		
+					// 1.human at 2 and 4
+					if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 460)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 460)) ){
+					
+						// comp at 0 and 3
+						if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 220) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 220) && (comp1.y == 460)) ){
+							while (randomDogPos == 1)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+						// comp at 3 and 4
+						else if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 0)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					} 
+				
+					// 2.human at 2 and 1
+					else if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 130)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 130)) ){
+					
+						// comp at 3 and 4
+						if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 2)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+					}
+				
+					// 3.human at 3 and 0
+					else if ( ((human1.x == 220) && (human1.y == 460) && (human2.x == 220) && (human2.y == 130)) 
+						|| ((human2.x == 220) && (human2.y == 460) && (human1.x == 220) && (human1.y == 130)) ){
+
+						//comp at 4 and 1						
+						if ( ((comp1.x == 580) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 580) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 130)) ){
+							while (randomDogPos == 1)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+
+					// 4.human at 2 and 3
+					if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 220) && (human2.y == 460)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 220) && (human1.y == 460)) ){
+					
+						// comp at 1 and 4
+						if ( ((comp1.x == 580) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 580) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 1)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+						// comp at 0 and 1
+						else if ( ((comp1.x == 220) && (comp1.y == 130) && (comp2.x == 580) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 130) && (comp1.x == 580) && (comp1.y == 130)) ){
+							while (randomDogPos == 0)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+
+					// 5.human at 2 and 1
+					else if ( ((human1.x == 400) && (human1.y == 300) && (human2.x == 580) && (human2.y == 130)) 
+						|| ((human2.x == 400) && (human2.y == 300) && (human1.x == 580) && (human1.y == 130)) ){
+					
+						// comp at 3 and 4
+						if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 580) && (comp2.y == 460))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 580) && (comp1.y == 460)) ){
+							while (randomDogPos == 0)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					
+					}
+
+					// 6.human at 4 and 1
+					else if ( ((human1.x == 580) && (human1.y == 460) && (human2.x == 580) && (human2.y == 130)) 
+						|| ((human2.x == 580) && (human2.y == 460) && (human1.x == 580) && (human1.y == 130)) ){
+
+						//comp at 3 and 0						
+						if ( ((comp1.x == 220) && (comp1.y == 460) && (comp2.x == 220) && (comp2.y == 130))
+							|| ((comp2.x == 220) && (comp2.y == 460) && (comp1.x == 220) && (comp1.y == 130)) ){
+							while (randomDogPos == 1)
+								randomDogPos = Math.floor(Math.random()*4);
+						}
+					}
+				
+					moveDog(randomDogPos);
+				} // if NOT human at 2,3, and comp at 4,1; AND not human at 2,4, and comp at 3,0
+			} // DOG AT BOTTOM
+		}
+	}
+	
 	// this is a  simple computer algorithm of the chess game
 	// computer will randomly pick 1 of the 2 pieces and move to the open position
 	// it does not calculate the best move. The move may lead computer to a loss.
@@ -513,6 +962,7 @@ GameStates.makeHard = function( game, shared ) {
 		// set it to high score and save to local storage
 		highScore = Math.max(score, highScore);
 		localStorage.setItem(localStorageName, highScore);
+		localStorage.setItem(localStorageNameOutcome, outcome);
 	}
 	
     
@@ -522,10 +972,8 @@ GameStates.makeHard = function( game, shared ) {
     
             //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
             
-            randomDog = Math.floor(Math.random()*4);
-            
             // Add music
-			music = game.add.audio('gameMusic');
+			music = game.add.audio('hardMusic');
 			music.loop = true;
 			music.play();
 			
@@ -533,7 +981,7 @@ GameStates.makeHard = function( game, shared ) {
 			click = game.add.audio('click');
             
             //  A simple background for our game
-			background = game.add.sprite( 0, 0, 'bg' );
+			background = game.add.sprite( 0, 0, 'hardBG' );
 			
 			// create the board
 			board = game.add.sprite(400, 300, 'board');
@@ -682,10 +1130,7 @@ GameStates.makeHard = function( game, shared ) {
         	scoreText.text = "Score: " + score;
             
             // decrease time limit as score increases
-            if (score >=50){
-            	time = 1;
-            }
-            else if (score >=34){
+            if (score >=34){
             	time = 2;
             }
 			else if (score >=26){

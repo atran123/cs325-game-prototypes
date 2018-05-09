@@ -11,6 +11,7 @@
 	<script src="js/MainMenu.js"></script>
 	<script src="js/Easy.js"></script>
 	<script src="js/Hard.js"></script>
+	<script src="js/Impossible.js"></script>
 	<script src="js/Exit.js"></script>
 	<script src="js/Score.js"></script>
 	<!-- main.js must come last since it references the other ones. -->
@@ -52,13 +53,17 @@ Have fun. The goal of the game is to corner your opponent.  A player wins if the
 </li>
 
 <li><strong>Gameplay:</strong>
-Each side will have 2 pieces, on a simple board. There is exactly 1 open position at any given time. Computer's pieces are purple and on top of board, player's are green and at bottom.  Player goes first.  Only 1 piece can be moved per turn. 
-<br>- If the dog is on the right side of the board, player's will not be able to move the right piece on the 1st move, since that would instantly make computer out of moves.  Similarly, if the dog is on the left side of the board, player's won't be able to move the left piece on the 1st move. 
+- Each side will have 2 pieces, on a simple board. The dog will be on 1 of the 4 edges, between 2 positions.
+<br>- There is exactly 1 open position at any given time. 
+<br>- AI's pieces are purple and on top of board, player's are green and at bottom.  
+<br>- Player goes first.  Only 1 piece can be moved per turn. 
+<br>- If the dog is on the right side of the board, player's will not be able to move the right piece on the 1st move, since that would instantly make AI out of moves.  Similarly, if the dog is on the left side of the board, player's won't be able to move the left piece on the 1st move. 
 <br>- Chess pieces can be moved horizontally, vertically, or diagonally to the open position.
-Player starts with a time limit of 8 seconds to move.  Each successful move earns a point.  As the score goes up, the time limit will gradually goes down to 1 second. 
+<br>- Player starts with a time limit of 8 seconds to move.  Each successful move earns a point.  As the score goes up, the time limit will gradually goes down to 2 second. 
 <br>- The player loses when he/she is out of moves, or time is up before he/she can make a move.
-<br>- In the easy mode, the dog will remain in its initial position throughout the game. The computer will randomly pick 1 of the 2 pieces to move to the open position, it does not calculate the best move. The move may lead the computer to a loss.
-<br>- In the hard mode, the dog will randomly move to different positions throughout the game. A dog's move will not put the player in an "out of moves" situation.  The computer will also calculate which piece is best to move.  This mode is not implemented yet.  The easy mode is used in its place.
+<br>- Easy mode: the dog will remain in its initial position throughout the game. AI's strategy is simple: it will randomly pick 1 of the 2 pieces to move to the open position. AI does not calculate the best move, it can make mistake, and the player can take avantage to win.
+<br>- Hard mode: the dog will randomly move to different positions throughout the game. A dog's move will not put the player in an "out of moves" situation. AI does not calculate the best move, it can make mistake, and the player can take avantage to win.
+<br>- Impossible mode: the dog will randomly move to different positions throughout the game. A dog's move will not put the player in an "out of moves" situation. AI does calculate the best move, it does not make mistake, and it may be impossible to win. The objective of the player is to make as many moves as possible before losing.
 
 </li>
 
